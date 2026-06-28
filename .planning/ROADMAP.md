@@ -41,13 +41,18 @@ Plans:
 **Depends on**: Phase 1
 **Requirements**: AUTH-02
 **Success Criteria** (what must be TRUE):
-  1. Authenticated user can create a new project with name and description
-  2. User can view a list of all their projects
-  3. User can edit project name and description
-  4. User can delete a project
-  5. Each user sees only their own projects (data isolation)
-**Plans**: TBD
+   1. Authenticated user can create a new project with name and description
+   2. User can view a list of all their projects
+   3. User can edit project name and description
+   4. User can delete a project
+   5. Each user sees only their own projects (data isolation)
+**Plans**: 3 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 02-01-PLAN.md — Backend: Project CRUD API (tag migration, schemas, 5 endpoints)
+- [ ] 02-02-PLAN.md — Frontend: Project List & Create (cards, grid, create form, sidebar update)
+- [ ] 02-03-PLAN.md — Frontend: Project Detail & Edit & Delete (detail tabs, edit form, delete dialog)
 
 ### Phase 3: GitHub Integration & Repository Ingestion
 **Goal**: Users can ingest GitHub repositories into projects for evaluation
@@ -141,7 +146,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
-| 2. Project Management | 0/0 | Not started | - |
+| 2. Project Management | 0/3 | Planning: 3 plans created | - |
 | 3. GitHub Integration & Repository Ingestion | 0/0 | Not started | - |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
