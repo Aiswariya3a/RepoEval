@@ -56,8 +56,15 @@ Built as a web application combining GitHub API integration, static analysis too
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | LLM integration approach | Core to AI agent evaluation engine | — Pending |
-| Evaluation architecture | Agent-based vs pipeline-based assessment | — Pending |
-| Frontend framework | Web-based SaaS delivery | — Pending |
+| Evaluation architecture | Pipeline-based for v1, agentic for v2 | ✓ Decided |
+| Frontend framework | Next.js 16 App Router with shadcn/ui | ✓ Decided |
+| Backend framework | Python 3.12+ / FastAPI 0.138 | ✓ Decided |
+| Database | PostgreSQL 16 + SQLAlchemy async + Alembic | ✓ Decided |
+| Auth | GitHub OAuth App + JWT httpOnly cookies | ✓ Decided |
+| Theme | Dark indigo (#0F172A bg, #4F46E5 primary), dark mode first | ✓ Decided |
+| Design system | shadcn/ui + Inter + JetBrains Mono + custom indigo palette | ✓ Decided |
+| Deployment | Railway (backend Docker) + Vercel (frontend Next.js) | ✓ Decided |
+| Dev environment | Docker Compose (FastAPI + PostgreSQL + Redis) | ✓ Decided |
 
 ## Evolution
 
