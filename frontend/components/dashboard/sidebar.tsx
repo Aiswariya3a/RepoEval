@@ -1,27 +1,36 @@
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
 
-const MOCK_USER = {
-  display_name: "User",
-  avatar_url: null,
-};
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/app/auth-provider";
 
 export function Sidebar() {
-  const initials = MOCK_USER.display_name
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  if (!user) return null;
+
+  const initials = user.display_name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
 
+  const handleSignOut = async () => {
+    await logout();
+    router.replace("/sign-in");
+  };
+
   return (
     <aside className="w-64 h-screen border-r border-border flex flex-col p-4 bg-card">
       <div className="flex items-center gap-3 mb-6">
         <Avatar className="h-8 w-8">
-          <AvatarImage src={MOCK_USER.avatar_url || undefined} alt={MOCK_USER.display_name} />
+          <AvatarImage src={user.avatar_url || undefined} alt={user.display_name} />
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
-        <span className="text-sm font-medium truncate">{MOCK_USER.display_name}</span>
+        <span className="text-sm font-medium truncate">{user.display_name}</span>
       </div>
 
       <nav className="flex-1 space-y-1">
@@ -39,12 +48,12 @@ export function Sidebar() {
         </span>
       </nav>
 
-      <Link
-        href="/sign-in"
-        className="px-3 py-2 text-sm text-muted-foreground hover:underline"
+      <button
+        onClick={handleSignOut}
+        className="px-3 py-2 text-sm text-muted-foreground hover:underline text-left"
       >
         Sign out
-      </Link>
+      </button>
     </aside>
   );
 }

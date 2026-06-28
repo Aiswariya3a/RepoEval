@@ -1,13 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { useAuth } from "@/app/auth-provider";
 
 const OAUTH_ERRORS: Record<string, string> = {
   generic: "Unable to sign in with GitHub. Please try again.",
@@ -18,8 +19,28 @@ const OAUTH_ERRORS: Record<string, string> = {
 
 function SignInContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const errorCode = searchParams.get("error");
   const errorMessage = errorCode ? OAUTH_ERRORS[errorCode] || OAUTH_ERRORS.generic : null;
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/dashboard");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading…</p>
+      </main>
+    );
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-background p-4">
