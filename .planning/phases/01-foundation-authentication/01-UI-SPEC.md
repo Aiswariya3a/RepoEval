@@ -3,7 +3,7 @@ phase: 1
 slug: foundation-authentication
 status: draft
 shadcn_initialized: false
-preset: default (Next.js 16 App Router + Tailwind CSS v4, Neutral/Stone, CSS variables)
+preset: custom (Next.js 16 App Router + Tailwind CSS v4, Dark Indigo, CSS variables)
 created: 2026-06-28
 ---
 
@@ -17,17 +17,20 @@ created: 2026-06-28
 
 | Property | Value |
 |----------|-------|
-| Tool | shadcn/ui |
-| Preset | Next.js 16 App Router + Tailwind CSS v4, Neutral/Stone, CSS variables mode (to be initialized via `npx shadcn init`) |
+| Tool | shadcn/ui (custom theme) |
+| Preset | Next.js 16 App Router + Tailwind CSS v4, Dark Indigo theme, CSS variables mode |
 | Component library | @radix-ui/react primitives (managed by shadcn) |
 | Icon library | lucide-react |
 | Font | Inter (via `next/font/google`) |
+| Code font | JetBrains Mono (via `next/font/google`) |
+| Theme | **Dark mode first** — light mode optional, deferred to post-v1 |
 
 **Note:** shadcn/ui not yet initialized. Initialize before Phase 1 frontend execution:
-1. Run `npx shadcn init` with Neutral/Stone color, CSS variables, Inter font family
-2. Run `npx shadcn add button card avatar` for Phase 1 components
+1. Run `npx shadcn init` with custom CSS variables for the dark indigo palette
+2. Apply the color token overrides defined below
+3. Run `npx shadcn add button card avatar` for Phase 1 components
 
----
+**Design inspiration:** GitHub Insights, GitLab Analytics, Linear, Vercel Dashboard, Grafana, Datadog, SonarQube, Jira Dashboards. The app should feel like an AI Engineering Manager — clean, data-dense, professional, enterprise SaaS.
 
 ## Spacing Scale
 
@@ -54,35 +57,59 @@ Exceptions:
 | Role | Size | Weight | Line Height | Usage |
 |------|------|--------|-------------|-------|
 | Body | 16px | 400 (Regular) | 1.5 | Page body text, card descriptions, empty state body, sidebar nav labels |
-| Label | 14px | 500 (Medium) | 1.4 | Small labels, button text (overrides Button default if needed), form helper text, OAuth error message |
+| Label | 14px | 500 (Medium) | 1.4 | Small labels, button text, form helper text, OAuth error message |
 | Heading | 20px | 600 (Semibold) | 1.2 | Card titles, section headings, welcome heading |
 | Display | 28px | 600 (Semibold) | 1.2 | Sign-in page value proposition tagline, page-level hero title |
 
 **Font family:** Inter (variable font, loaded via `next/font/google` with `display=swap` and `subsets: ['latin']`)
+**Code font:** JetBrains Mono (loaded via `next/font/google` for code blocks, metrics, and technical displays)
 
 ---
 
 ## Color
 
-| Role | Token | Value | Usage |
-|------|-------|-------|-------|
-| Dominant (60%) | `--background` | hsl(0 0% 100%) | Page backgrounds, main content area |
-| Dominant surface | `--muted` / `--muted-foreground` | hsl(0 0% 96%) / hsl(0 0% 45%) | Muted backgrounds, secondary text |
-| Secondary (30%) | `--card` / `--card-foreground` | hsl(0 0% 100%) / hsl(0 0% 3.9%) | Sign-in card, sidebar shell (background), cards, surface containers |
-| Secondary border | `--border` | hsl(0 0% 89.8%) | Card borders, input borders, sidebar divider |
-| Accent (10%) | `--primary` / `--primary-foreground` | hsl(0 0% 9%) / hsl(0 0% 100%) | **Reserved for:** Sign-in OAuth button (default state), "Create Project" CTA button, active nav link indicator, primary interactive elements |
-| Accent hover | `--primary` at reduced opacity |   | Button hover state (opacity 90%), link hover |
-| Accent secondary | `--accent` / `--accent-foreground` | hsl(0 0% 96%) / hsl(0 0% 9%) | Secondary interactive states (nav item hover, subtle button alternative) |
-| Destructive | `--destructive` / `--destructive-foreground` | hsl(0 100% 50%) / hsl(0 0% 100%) | Not used in Phase 1 — reserved for future destructive actions |
+**Dark mode first.** Light mode is optional and deferred to post-v1.
 
-| Semantic Color | Value | Usage |
-|----------------|-------|-------|
-| OAuth Error Text | hsl(0 84% 60%) | Inline inline error message on sign-in page |
-| GitHub Icon | hsl(0 0% 0%) | GitHub logo/mark in OAuth button (standard branding) |
+### Palette
 
-Accent reserved for: Sign-in OAuth button (default/hover), "Create Project" CTA button, active navigation link indicator, primary interactive controls. **Never used** for decorative elements, borders, or non-interactive surfaces.
+| Role | Hex | CSS Variable | Usage |
+|------|-----|-------------|-------|
+| Background | #0F172A | `--background` | Page backgrounds, main content area |
+| Surface | #1E293B | `--card` / `--muted` | Cards, sidebar, surface containers |
+| Border | #334155 | `--border` | Card borders, input borders, sidebar divider |
+| Primary Text | #F8FAFC | `--foreground` / `--card-foreground` | Primary text color |
+| Secondary Text | #94A3B8 | `--muted-foreground` | Secondary text, labels, metadata |
 
-**Mode:** Light mode only for v1. No dark mode tokens defined. Use shadcn default neutral/stone palette exclusively.
+### Accent Colors
+
+| Role | Hex | CSS Variable | Usage |
+|------|-----|-------------|-------|
+| Primary | #4F46E5 | `--primary` | OAuth button, CTA buttons, active nav, primary interactive elements |
+| Primary Hover | #6366F1 | `--primary-hover` | Button hover, link hover |
+| Primary Foreground | #FFFFFF | `--primary-foreground` | Text on primary backgrounds |
+| Secondary | #3B82F6 | `--secondary` | Secondary interactive elements, info badges |
+| Success | #10B981 | `--success` | Positive metrics, green scores, passed checks |
+| Warning | #F59E0B | `--warning` | Warning indicators, medium-risk flags |
+| Risk/Danger | #EF4444 | `--destructive` | Risk flags, error states, low scores, destructive actions |
+| Info | #06B6D4 | `--info` | Informational badges, help text, cyan accents |
+| Accent | #1E293B | `--accent` | Secondary interactive states (nav item hover) |
+| Accent Foreground | #F8FAFC | `--accent-foreground` | Text on accent backgrounds |
+
+### Border Radius
+
+| Element | Value | Usage |
+|---------|-------|-------|
+| Cards | 16px (rounded-2xl) | Dashboard cards, metric cards, analysis panels |
+| Buttons | 12px (rounded-xl) | All buttons, CTA elements |
+| Inputs | 10px (rounded-lg) | Form inputs, search fields |
+| Badges/Pills | 9999px (rounded-full) | Status badges, score pills |
+
+### Usage Rules
+
+- Primary (#4F46E5) is **reserved for interactive elements only** — buttons, active nav, links. Never used for decorative elements, borders, or non-interactive surfaces.
+- Success/Warning/Risk colors used exclusively for **semantic indicators** — scores, risk levels, status badges.
+- 60/30/10 rule: Background (60%), Surface/Cards (30%), Accent colors (10%).
+- **Never use pure white (#FFFFFF) or pure black (#000000)** for text — use #F8FAFC and #0F172A respectively.
 
 ---
 
@@ -102,7 +129,7 @@ Accent reserved for: Sign-in OAuth button (default/hover), "Create Project" CTA 
 | Sign out button | "Sign out" | User menu dropdown (to be placed in sidebar header during Phase 1 layout prep) |
 | Loading state | "Redirecting to GitHub…" | Shown during OAuth redirect — replaces sign-in button text momentarily |
 
-**Tone:** Direct, confident, technical-professional. No emoji, no exclamation marks, no jargon. "You" second-person for user-facing copy.
+**Tone:** Direct, confident, technical-professional. No emoji, no exclamation marks, no jargon. "You" second-person for user-facing copy. AI explanations accompany every metric — never show a score without explaining what it means and what to do about it.
 
 ---
 
@@ -259,6 +286,88 @@ Post-init, verify:
 - `app/globals.css` contains CSS variable definitions for Neutral/Stone palette
 
 ---
+
+## Design Principles (All Phases)
+
+These principles apply globally across every phase of the platform:
+
+1. **Metrics before text** — Data visualizations (gauges, charts, rings) take visual priority over explanatory text
+2. **Visual insights before tables** — Render insights as charts/heatmaps/radar first; tables are secondary detail views
+3. **Every page answers "What should I do next?"** — Actionable recommendations and next steps are always visible
+4. **One-click drill-down** — Every score, metric, and insight is clickable to reveal depth
+5. **AI accompanies metrics** — Never show a score without an AI explanation of what it means
+6. **Avoid unnecessary decoration** — Clean, minimal, professional. No decorative gradients, illustrations, or animations that don't serve data
+7. **Progressive disclosure** — Show summary first, expand on interaction, never overwhelm with all detail at once
+
+## Animation
+
+| Element | Behavior |
+|---------|----------|
+| Transitions | Smooth 200ms ease-in-out for all state changes (hover, focus, expand) |
+| Score counters | Animated count-up on page load / scroll into view (e.g., 0 → 82) |
+| Loading skeletons | Progressive loading skeleton for cards, charts, and metrics while data loads |
+| Chart animations | Staggered draw animations for charts on appear |
+| Expand/collapse | Smooth height transition on expandable analysis sections (max-height animation) |
+| Button press | Scale transform (0.98) on mousedown, release on mouseup/click |
+
+## Component Library (Full Platform)
+
+The platform uses these component types extensively across all phases. Phase 1 only implements the sign-in page and dashboard shell, but the design system should support:
+
+- **Dashboard Cards** — Surface containers with header, content, optional footer
+- **Metric Cards** — Single-number display with label, trend indicator, optional mini-chart
+- **Progress Rings** — Circular progress indicators for health scores
+- **Health Score Gauges** — Semi-circular or arc gauges for overall health
+- **Timeline** — Chronological event lists with visual markers
+- **Activity Heatmaps** — Grid-based activity visualization (GitHub-style contribution graph)
+- **Radar Charts** — Multi-dimensional score comparison (code quality, docs, engineering, etc.)
+- **Repository Tree View** — File/folder tree with metrics per node
+- **Contributor Leaderboard** — Ranked contributor list with stats
+- **AI Summary Cards** — Distinct visual treatment for AI-generated narrative content
+- **Risk Cards** — Warning/danger-styled cards for identified risks
+- **Recommendation Panels** — Actionable recommendation display with priority indicators
+- **Expandable Analysis Sections** — Collapsible sections with smooth height transitions
+
+## Interactive Dashboard Layout (Post-v1 Reference)
+
+The full dashboard layout (Phase 9+) follows this structure. Phase 1 only prepares the sidebar shell; this reference guides token and component decisions:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  ┌────────┐  Repository Health Score                         │
+│  │ Sidebar│  82 / 100                                        │
+│  │ 256px  │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐            │
+│  │        │  │ Lang │ │Cmits │ │Contrib│ │Branc │            │
+│  │ Nav    │  └──────┘ └──────┘ └──────┘ └──────┘            │
+│  │ Items  │                                                   │
+│  │        │  Score Breakdown                                  │
+│  │        │  [Radar Chart] Code Quality │ Docs │ Eng │ Collab│
+│  │        │                                                   │
+│  │        │  Contributor Analytics  │  Repository Timeline    │
+│  │        │  ┌─────────────────┐    │  ┌──────────────────┐   │
+│  │        │  │ Leaderboard     │    │  │ Commit Activity  │   │
+│  │        │  │ Ownership       │    │  │ Heatmap          │   │
+│  │        │  │ Contribution %  │    │  └──────────────────┘   │
+│  │        │  └─────────────────┘    │                          │
+│  │        │                                                   │
+│  │        │  ┌──────────────────────────────────────────────┐ │
+│  │        │  │ Detected Risks                               │ │
+│  │        │  │ ● Bus factor risk — 1 contributor owns 80%   │ │
+│  │        │  │ ● Abandoned module: src/legacy/              │ │
+│  │        │  └──────────────────────────────────────────────┘ │
+│  │        │                                                   │
+│  │        │  ┌──────────────────────────────────────────────┐ │
+│  │        │  │ AI Executive Summary                         │ │
+│  │        │  │ [AI-generated narrative about project health] │ │
+│  │        │  └──────────────────────────────────────────────┘ │
+│  │        │                                                   │
+│  │        │  ┌──────────────────────────────────────────────┐ │
+│  │        │  │ Recommended Improvements                    │ │
+│  │        │  │ 1. [Action] — Priority: High                │ │
+│  │        │  │ 2. [Action] — Priority: Medium              │ │
+│  │        │  └──────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ## Checker Sign-Off
 
