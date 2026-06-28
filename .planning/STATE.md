@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 Phase: 1 of 9 (Foundation & Authentication)
 Plan: — (not yet planned)
 Status: Ready to plan
-Last activity: 2026-06-28 — Roadmap created with 9 phases
+Last activity: 2026-06-28 — Context gathered for Phase 1
 
 Progress: [                    ] 0%
 
@@ -42,6 +42,10 @@ Recent decisions affecting current work:
 - (Roadmap): AI evaluation split into Framework (Phase 6) and Assessment Dimensions (Phase 7) to manage complexity of 11 AIEE requirements
 - (Roadmap): Phase 4 (Static Analysis) and Phase 5 (Repository Mining) run in parallel dependency from Phase 3, not sequential
 - (Roadmap): Pipeline-based architecture for v1 AI agents (not fully agentic), per research recommendation
+- (Phase 1): GitHub OAuth + JWT authentication with httpOnly cookies
+- (Phase 1): Standard backend/frontend monorepo (FastAPI + Next.js)
+- (Phase 1): SQLAlchemy async + Alembic for database
+- (Phase 1): Railway backend + Vercel frontend deployment
 
 ### Pending Todos
 
@@ -54,5 +58,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-28
-Stopped at: Roadmap creation complete
-Resume file: None
+Stopped at: Phase 1 context gathered
+Resume file: .planning/phases/01-foundation-authentication/01-CONTEXT.md
