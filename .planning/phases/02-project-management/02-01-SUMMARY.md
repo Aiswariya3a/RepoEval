@@ -88,8 +88,10 @@ The local PostgreSQL service had password `admin` instead of the expected `postg
 
 ## Self-Check: PASSED
 
-- [x] All files created/modified exist and import without errors
-- [x] All 3 commits exist in git log
+- [x] All 7 expected files exist
+- [x] All 4 commits exist in git log (3 feature + 1 meta)
 - [x] No stubs (TODO/FIXME/placeholder) found in new code
 - [x] No unexpected file deletions
 - [x] All 5 endpoints verified via Python route introspection
+- [x] Alembic migration applied successfully (tags column in projects table)
+- [x] All schemas importable and functional (tested with model_validate)
