@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: completed
+stopped_at: Completed 02-01-PLAN.md — Backend CRUD API
+last_updated: "2026-06-28T21:04:11.000Z"
+last_activity: "2026-06-28 — Phase 2 Plan 01 complete: Backend project CRUD API with tags migration, schemas, and 5 endpoints"
+progress:
+  total_phases: 9
+  completed_phases: 1
+  total_plans: 7
+  completed_plans: 5
+  percent: 14
+---
+
 # Project State
 
 ## Project Reference
@@ -9,25 +25,28 @@ See: .planning/PROJECT.md (updated 2026-06-28)
 
 ## Current Position
 
-Phase: 1 of 9 (Foundation & Authentication)
-Plan: All 4 plans complete (01-01 through 01-04)
-Status: ✅ Phase 1 complete — full auth flow E2E (GitHub OAuth → JWT cookies → frontend guards → dashboard)
-Last activity: 2026-06-28 — Plan 01-04 executed: auth context, route guards, real user data in sidebar
+Phase: 2 of 9 (Project Management)
+Plan: 2 plans remaining (02-02, 02-03)
+Status: ✅ Phase 1 complete. Phase 2 Plan 01 complete — Backend CRUD API with tags, 5 endpoints, data isolation
+Last activity: 2026-06-28 — Phase 2 Plan 01 executed: tags migration, project schemas, CRUD router
 
-Progress: [████                ] 22%
+Progress: [█████               ] 25%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: ~0.15h
-- Total execution time: ~0.75 hours
+
+- Total plans completed: 5
+- Total plans created: 3 (Phase 2, ready to execute)
+- Average duration: ~0.19h
+- Total execution time: ~1.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01    | 4 / 4 | 4     | ~0.19h   |
+| 02    | 1 / 3 | 3     | ~0.33h   |
 
 *Updated after each plan completion*
 
@@ -39,15 +58,14 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - (Roadmap): 9-phase fine-grained structure derived from 29 v1 requirements and research dependency analysis
-- (Roadmap): AI evaluation split into Framework (Phase 6) and Assessment Dimensions (Phase 7) to manage complexity of 11 AIEE requirements
-- (Roadmap): Phase 4 (Static Analysis) and Phase 5 (Repository Mining) run in parallel dependency from Phase 3, not sequential
-- (Roadmap): Pipeline-based architecture for v1 AI agents (not fully agentic), per research recommendation
 - (Phase 1 Complete): GitHub OAuth + JWT auth with RS256, httpOnly cookies, refresh rotation
 - (Phase 1 Complete): Next.js 16 frontend with shadcn/ui, Dark Indigo palette, auth guards
 - (Phase 1 Complete): FastAPI backend with SQLAlchemy async, User/Session/Project models, Docker Compose
-- (Design): Dark indigo theme (#0F172A bg, #4F46E5 primary), dark mode first
-- (Design): shadcn/ui + Inter + JetBrains Mono + custom palette
-- (Design): Dashboard-centric layout with health scores, radar charts, AI summaries, risk cards
+- (Phase 2 Context): 30 locked decisions (D-01 to D-30) for project CRUD, card layout, routes, detail page, delete flow
+- (Phase 2): Project list as cards with auto-fill grid, sort newest first, page-number pagination, skeleton loading
+- (Phase 2): Dedicated /projects/new (create) and /projects/[id]/edit (edit) pages
+- (Phase 2): Detail page at /projects/[id] with Overview + Settings tabs, breadcrumbs
+- (Phase 2): Tags stored as ARRAY(String) in PostgreSQL, hybrid predefined+custom tag selector
 
 ### Pending Todos
 
@@ -60,6 +78,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-06-28
-Stopped at: Phase 1 complete — all 4 plans executed, full auth flow E2E
-Resume file: .planning/phases/02-project-management/02-01-PLAN.md (TBD)
-Next: /gsd-discuss-phase 2 or /gsd-plan-phase 2
+Stopped at: Phase 2 Plan 01 complete — Backend CRUD API
+Resume file: .planning/phases/02-project-management/02-02-PLAN.md
+Next: Execute Phase 2 Plan 02 (Frontend: Project List & Create)

@@ -50,7 +50,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 02-01-PLAN.md — Backend: Project CRUD API (tag migration, schemas, 5 endpoints)
+- [x] 02-01-PLAN.md — Backend: Project CRUD API (tag migration, schemas, 5 endpoints) ✅ Complete
 - [ ] 02-02-PLAN.md — Frontend: Project List & Create (cards, grid, create form, sidebar update)
 - [ ] 02-03-PLAN.md — Frontend: Project Detail & Edit & Delete (detail tabs, edit form, delete dialog)
 
@@ -146,7 +146,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
-| 2. Project Management | 0/3 | Planning: 3 plans created | - |
+| 2. Project Management | 1/3 | In progress: 02-01 complete, 02-02 ready | 2026-06-28 |
 | 3. GitHub Integration & Repository Ingestion | 0/0 | Not started | - |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
