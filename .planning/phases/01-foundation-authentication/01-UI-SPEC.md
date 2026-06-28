@@ -275,7 +275,42 @@ Run the following before frontend implementation:
 
 ```bash
 cd frontend
-npx shadcn init --defaults  # Accept all defaults: Neutral/Stone, CSS variables, Inter
+# Initialize shadcn with Next.js 16 App Router + Tailwind CSS v4
+npx shadcn@latest init
+# Customize CSS variables for Dark Indigo palette (see Color section above)
+```
+
+Post-init, apply the dark indigo palette by overriding CSS variables in `app/globals.css`:
+
+```css
+@layer base {
+  :root {
+    --background: 222 47% 11%;        /* #0F172A */
+    --foreground: 210 40% 98%;        /* #F8FAFC */
+    --card: 215 28% 17%;              /* #1E293B */
+    --card-foreground: 210 40% 98%;   /* #F8FAFC */
+    --popover: 215 28% 17%;           /* #1E293B */
+    --popover-foreground: 210 40% 98%;
+    --primary: 239 84% 67%;           /* #6366F1 (lighter for readability) */
+    --primary-foreground: 0 0% 100%;  /* #FFFFFF */
+    --secondary: 217 91% 60%;         /* #3B82F6 */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 215 28% 17%;             /* #1E293B */
+    --muted-foreground: 215 20% 65%;  /* #94A3B8 */
+    --accent: 215 28% 17%;            /* #1E293B */
+    --accent-foreground: 210 40% 98%; /* #F8FAFC */
+    --destructive: 0 84% 60%;         /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 25% 27%;            /* #334155 */
+    --input: 215 25% 27%;             /* #334155 */
+    --ring: 239 84% 67%;              /* #6366F1 */
+    --radius: 1rem;                   /* 16px base radius */
+  }
+}
+```
+
+Add required components:
+```bash
 npx shadcn add button card avatar
 ```
 
@@ -283,7 +318,7 @@ Post-init, verify:
 - `components.json` exists with correct preset metadata
 - `src/lib/utils.ts` has `cn()` helper
 - `src/components/ui/` contains `button.tsx`, `card.tsx`, `avatar.tsx`
-- `app/globals.css` contains CSS variable definitions for Neutral/Stone palette
+- `app/globals.css` contains the dark indigo CSS variable definitions above
 
 ---
 
