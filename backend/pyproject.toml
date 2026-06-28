@@ -1,0 +1,20 @@
+[project]
+name = "repoeval-api"
+version = "0.1.0"
+description = "RepoEval Backend API — AI-powered project evaluation platform"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.*",
+    "uvicorn[standard]==0.34.*",
+    "sqlalchemy[asyncio]==2.0.*",
+    "asyncpg==0.30.*",
+    "alembic==1.14.*",
+    "pydantic-settings>=2.0",
+    "httpx>=0.28",
+    "pyjwt>=2.9",
+    "cryptography>=44.0",
+    "python-dotenv>=1.0",
+]
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.backends._legacy._Backend"

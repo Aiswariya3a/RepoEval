@@ -27,8 +27,14 @@ Build an AI-powered platform that ingests GitHub repositories, runs static analy
   2. User can sign out of the platform
   3. User's session persists across page reloads and browser restarts
   4. User is redirected back to the application after successful GitHub OAuth authorization
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 01-01-PLAN.md — Backend Foundation + Docker + Database Schema
+- [ ] 01-02-PLAN.md — Frontend Foundation + shadcn/ui + Sign-In Page + Dashboard Shell
+- [ ] 01-03-PLAN.md — JWT Service + Auth Middleware + GitHub OAuth Endpoints
+- [ ] 01-04-PLAN.md — Frontend Auth Wiring + Session Management + Real User Data
 
 ### Phase 2: Project Management
 **Goal**: Users can create and manage their evaluation projects
@@ -134,7 +140,7 @@ Build an AI-powered platform that ingests GitHub repositories, runs static analy
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Authentication | 0/0 | Not started | - |
+| 1. Foundation & Authentication | 0/4 | Not started | - |
 | 2. Project Management | 0/0 | Not started | - |
 | 3. GitHub Integration & Repository Ingestion | 0/0 | Not started | - |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
