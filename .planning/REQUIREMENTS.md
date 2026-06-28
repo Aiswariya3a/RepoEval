@@ -87,40 +87,40 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | | Pending |
-| AUTH-02 | | Pending |
-| AUTH-03 | | Pending |
-| REPO-01 | | Pending |
-| REPO-02 | | Pending |
-| REPO-03 | | Pending |
-| SCA-01 | | Pending |
-| SCA-02 | | Pending |
-| SCA-03 | | Pending |
-| MINE-01 | | Pending |
-| MINE-02 | | Pending |
-| MINE-03 | | Pending |
-| MINE-04 | | Pending |
-| AIEE-01 | | Pending |
-| AIEE-02 | | Pending |
-| AIEE-03 | | Pending |
-| AIEE-04 | | Pending |
-| AIEE-05 | | Pending |
-| AIEE-06 | | Pending |
-| AIEE-07 | | Pending |
-| AIEE-08 | | Pending |
-| AIEE-09 | | Pending |
-| AIEE-10 | | Pending |
-| AIEE-11 | | Pending |
-| RPT-01 | | Pending |
-| RPT-02 | | Pending |
-| RPT-03 | | Pending |
-| RPT-04 | | Pending |
-| RPT-05 | | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 9 | Pending |
+| REPO-01 | Phase 3 | Pending |
+| REPO-02 | Phase 3 | Pending |
+| REPO-03 | Phase 3 | Pending |
+| SCA-01 | Phase 4 | Pending |
+| SCA-02 | Phase 4 | Pending |
+| SCA-03 | Phase 4 | Pending |
+| MINE-01 | Phase 5 | Pending |
+| MINE-02 | Phase 5 | Pending |
+| MINE-03 | Phase 5 | Pending |
+| MINE-04 | Phase 5 | Pending |
+| AIEE-01 | Phase 6 | Pending |
+| AIEE-02 | Phase 7 | Pending |
+| AIEE-03 | Phase 7 | Pending |
+| AIEE-04 | Phase 7 | Pending |
+| AIEE-05 | Phase 7 | Pending |
+| AIEE-06 | Phase 7 | Pending |
+| AIEE-07 | Phase 7 | Pending |
+| AIEE-08 | Phase 7 | Pending |
+| AIEE-09 | Phase 7 | Pending |
+| AIEE-10 | Phase 6 | Pending |
+| AIEE-11 | Phase 6 | Pending |
+| RPT-01 | Phase 8 | Pending |
+| RPT-02 | Phase 9 | Pending |
+| RPT-03 | Phase 8 | Pending |
+| RPT-04 | Phase 8 | Pending |
+| RPT-05 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 28 total
-- Mapped to phases: 0
-- Unmapped: 28 ⚠️
+- v1 requirements: 29 total
+- Mapped to phases: 29
+- Unmapped: 0 ✅
 
 ---
 *Requirements defined: 2026-06-28*
