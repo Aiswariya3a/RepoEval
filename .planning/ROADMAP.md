@@ -64,8 +64,14 @@ Plans:
   3. User can see ingestion status (queued, cloning, analyzing, complete, or error)
   4. System successfully ingests large repositories (10,000+ commits, 5,000+ files) with pagination and rate-limit awareness
   5. Ingestion completes within minutes for typical repositories (< 5,000 commits, < 500 files)
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 03-01-PLAN.md — Backend: Repo Data Model, Migration & API Endpoints
+- [ ] 03-02-PLAN.md — Backend: Ingestion Pipeline with Celery, Clone & Checkpoint Recovery
+- [ ] 03-03-PLAN.md — Frontend: Repo UI Components (badge, progress panel, form field, hook)
+- [ ] 03-04-PLAN.md — Frontend: Integration into Forms, Detail Page & Project Cards
 
 ### Phase 4: Static Code Analysis Pipeline
 **Goal**: System produces deterministic code quality metrics from ingested repository code

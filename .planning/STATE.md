@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: All plans executed
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-07-05T07:54:56.404Z"
+status: Phase 3 planned — 4 plans, 3 waves
+stopped_at: Phase 3 plans created
+last_updated: "2026-07-05T07:55:00.000Z"
 last_activity: 2026-07-05
 progress:
   total_phases: 9
   completed_phases: 2
-  total_plans: 7
+  total_plans: 11
   completed_plans: 7
   percent: 22
 ---
@@ -21,23 +21,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** Automatically generate objective, rubric-based evaluation reports for any GitHub repository within minutes — identifying risks, strengths, weaknesses, and actionable recommendations.
-**Current focus:** Phase 02 — Project Management
+**Current focus:** Phase 03 — GitHub Integration & Repository Ingestion
 
 ## Current Position
 
-Phase: 02 (Project Management) — COMPLETE
-Plan: 3 of 3
-Status: All plans executed
+Phase: 03 (GitHub Integration & Repository Ingestion) — PLANNED (4 plans, 3 waves)
+Plan: 0 of 4
+Status: Plans created, ready for execution
 Last activity: 2026-07-05
-
-Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 7
-- Total plans created: 3 (Phase 2, completed)
+- Total plans created: 4 (Phase 3, planned)
 - Average duration: ~0.17h
 - Total execution time: ~1.2 hours
 
@@ -47,9 +45,7 @@ Progress: [██████████] 100%
 |-------|-------|-------|----------|
 | 01    | 4 / 4 | 4     | ~0.19h   |
 | 02    | 3 / 3 | 3     | ~0.10h   |
-
-*Updated after each plan completion*
-| Phase 02-project-management P03 | 2min | 3 tasks | 5 files |
+| 03    | 0 / 4 | 4     | — (planned) |
 
 ## Accumulated Context
 
@@ -58,12 +54,33 @@ Progress: [██████████] 100%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- (Phase 3): D-31 — Manual ingest trigger, user clicks "Ingest"
+- (Phase 3): D-32 — Repo URLs via create/edit forms (D-16 placeholder now functional)
+- (Phase 3): D-33 — Hybrid API + git clone (eager full data fetch)
+- (Phase 3): D-34 — Clone to temp, extract, persist, delete
+- (Phase 3): D-35 — Celery-based background pipeline with queue-based architecture
+- (Phase 3): D-36 — Authenticated via user's GitHub OAuth token
+- (Phase 3): D-37 — Graceful pause/resume on API rate limits (honor x-ratelimit-reset)
+- (Phase 3): D-38 — Incremental processing for large repos
+- (Phase 3): D-39 — Paused/resumed from last checkpoint
+- (Phase 3): D-40 — No arbitrary repo size limits
+- (Phase 3): D-41 — Status badge on project card
+- (Phase 3): D-42 — Inline progress panel on detail page
+- (Phase 3): D-43 — REST polling for status (consistent with fetchApi pattern)
+- (Phase 3): D-44 — Status lifecycle: pending→queued→fetching_metadata→cloning→analyzing→complete|failed|paused
+- (Phase 3): D-45 — project_repos table (owner, name, description, default_branch, visibility, URL, languages, language_percentages, tech_stack, ingestion_status)
+- (Phase 3): D-46 — File tree stored for Phase 4 static analysis
+- (Phase 3): D-47 — Commit, PR, issue data stored for Phase 5 mining
+- (Phase 3): D-48 — Each ingestion creates immutable snapshot linked to commit SHA
+- (Phase 3): D-49 — Re-ingestion creates new snapshot, preserves old analyses
+- (Phase 3): D-50 — Checkpoint-based retry, resume from last successful stage
+
 - (Phase 2): DeleteProjectDialog uses controlled modal with backdrop overlay
 - (Phase 2): Duplicate creates project with "(copy)" suffix and navigates to new project
 - (Phase 2): TagSelector extracted as shared component between create and edit forms
 - (Phase 2): Settings tab contains both inline edit form and danger zone delete section
 - (Phase 2): Edit page cancel navigates to detail view (/projects/[id]) per D-18
-- (Phase 2): Three-dot menu on detail page header, not on project grid cards (deferred to Phase 3)
+- (Phase 2): Three-dot menu on detail page header, not on project grid cards
 
 - (Roadmap): 9-phase fine-grained structure derived from 29 v1 requirements and research dependency analysis
 - (Phase 1 Complete): GitHub OAuth + JWT auth with RS256, httpOnly cookies, refresh rotation
@@ -81,7 +98,7 @@ Recent decisions affecting current work:
 - (Phase 2): Tags stored as ARRAY(String) in PostgreSQL, hybrid predefined+custom tag selector
 - [Phase ?]: Skeleton card count set to 6 for initial loading state
 - [Phase ?]: Pagination page size set to 12 (from plan recommendation range)
-- [Phase ?]: Repo URLs field on create form disabled with tooltip message per D-30 deferral
+- [Phase ?]: Repo URLs field on create form disabled with tooltip message per D-30 deferral (now active D-32)
 - [Phase ?]: Projects layout re-exports dashboard layout for consistent auth protection and sidebar
 
 ### Pending Todos
@@ -94,7 +111,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-05T07:54:56.391Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-github-integration-repository-ingestion/03-UI-SPEC.md
-Next: Transition to Phase 3 — Repository Ingestion
+Last session: 2026-07-05T07:55:00.000Z
+Stopped at: Phase 3 plans created
+Resume file: .planning/phases/03-github-integration-repository-ingestion/03-01-PLAN.md
+Next: Execute Phase 3 — run `/gsd-execute-phase 3` to start Plan 01 execution
