@@ -8,7 +8,7 @@ Build an AI-powered platform that ingests GitHub repositories, runs static analy
 
 - [ ] **Phase 1: Foundation & Authentication** - GitHub OAuth sign-in, project scaffolding, database schema, and deployment infrastructure
 - [x] **Phase 2: Project Management** - Create, view, edit, and delete evaluation projects (completed 2026-07-05)
-- [ ] **Phase 3: GitHub Integration & Repository Ingestion** - Ingest GitHub repos with language detection and large-repo handling (1/4 plans complete)
+- [ ] **Phase 3: GitHub Integration & Repository Ingestion** - Ingest GitHub repos with language detection and large-repo handling (3/4 plans complete)
 - [ ] **Phase 4: Static Code Analysis Pipeline** - Run static analysis tools to produce code quality metrics and composite scores
 - [ ] **Phase 5: Repository Mining Pipeline** - Analyze commit history, PRs, issues, and contributor statistics
 - [ ] **Phase 6: AI Evaluation Framework** - Build the agent orchestration architecture with source grounding and rubric scoring
@@ -69,8 +69,8 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Backend: Repo Data Model, Migration & API Endpoints ✅ Complete
-- [ ] 03-02-PLAN.md — Backend: Ingestion Pipeline with Celery, Clone & Checkpoint Recovery
-- [ ] 03-03-PLAN.md — Frontend: Repo UI Components (badge, progress panel, form field, hook)
+- [x] 03-02-PLAN.md — Backend: Ingestion Pipeline with Celery, Clone & Checkpoint Recovery ✅ Complete
+- [x] 03-03-PLAN.md — Frontend: Repo UI Components (badge, progress panel, form field, hook) ✅ Complete
 - [ ] 03-04-PLAN.md — Frontend: Integration into Forms, Detail Page & Project Cards
 
 ### Phase 4: Static Code Analysis Pipeline
@@ -153,7 +153,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
 | 2. Project Management | 3/3 | Complete   | 2026-07-05 |
-| 3. GitHub Integration & Repository Ingestion | 1/4 | Executing | - |
+| 3. GitHub Integration & Repository Ingestion | 3/4 | In Progress|  |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
 | 6. AI Evaluation Framework | 0/0 | Not started | - |
