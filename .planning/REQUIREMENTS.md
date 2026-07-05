@@ -8,7 +8,7 @@
 ### Authentication & User Management
 
 - [ ] **AUTH-01**: User can sign in with GitHub OAuth
-- [ ] **AUTH-02**: User can create and manage multiple projects
+- [x] **AUTH-02**: User can create and manage multiple projects
 - [ ] **AUTH-03**: User can view a dashboard of all evaluated projects
 
 ### Repository Ingestion
@@ -88,7 +88,7 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 9 | Pending |
 | REPO-01 | Phase 3 | Pending |
 | REPO-02 | Phase 3 | Pending |
