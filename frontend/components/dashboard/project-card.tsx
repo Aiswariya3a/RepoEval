@@ -4,6 +4,7 @@ import { Calendar, GitBranch, MoreHorizontal } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IngestionBadge, getAggregateBadgeLabel } from "@/components/repos/ingestion-badge";
+import { getAggregateAnalysisLabel } from "@/lib/api-repos";
 import type { Project } from "@/lib/api-projects";
 
 function formatDate(dateString: string): string {
@@ -15,7 +16,13 @@ function formatDate(dateString: string): string {
   });
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({
+  project,
+  analysisStatus,
+}: {
+  project: Project;
+  analysisStatus?: "analyzed" | "partial" | "pending" | "running" | null;
+}) {
   return (
     <Link href={`/projects/${project.id}`} className="block">
       <Card className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
@@ -62,6 +69,19 @@ export function ProjectCard({ project }: { project: Project }) {
                 />
               </span>
             )}
+            {(() => {
+              const analysisLabel = getAggregateAnalysisLabel(analysisStatus ?? null);
+              if (!analysisLabel) return null;
+              return (
+                <span className={`inline-flex items-center gap-1 text-xs font-medium ${analysisLabel.color}`}>
+                  <span
+                    className="size-1.5 rounded-full"
+                    style={{ backgroundColor: analysisLabel.dotColor }}
+                  />
+                  {analysisLabel.label}
+                </span>
+              );
+            })()}
           </div>
         </CardFooter>
       </Card>

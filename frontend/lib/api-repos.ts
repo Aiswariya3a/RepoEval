@@ -119,6 +119,21 @@ export function parseGithubUrl(url: string): {
   return { owner: match[1], name: match[2] };
 }
 
+/** Get display label and color for aggregate analysis badge on project cards. */
+export function getAggregateAnalysisLabel(
+  status: "analyzed" | "partial" | "pending" | "running" | null
+): { label: string; color: string; dotColor: string } | null {
+  if (!status || status === "pending") return null;
+  switch (status) {
+    case "analyzed":
+      return { label: "Analyzed", color: "text-[#10B981]", dotColor: "#10B981" };
+    case "partial":
+      return { label: "Partial", color: "text-[#F59E0B]", dotColor: "#F59E0B" };
+    case "running":
+      return { label: "Analyzing", color: "text-[#4F46E5]", dotColor: "#4F46E5" };
+  }
+}
+
 /** Aggregate multiple repos' statuses per D-41 priority: failed > paused > in_progress > complete > pending */
 export function aggregateStatus(
   repos: Repo[]
