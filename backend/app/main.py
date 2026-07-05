@@ -4,6 +4,7 @@ from app.config import Settings
 from app.auth.router import router as auth_router
 from app.projects.router import router as projects_router
 from app.repos.router import router as repos_router
+from app.analysis.router import router as analysis_router
 
 settings = Settings()
 
@@ -24,6 +25,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(projects_router)
 app.include_router(repos_router)
+app.include_router(analysis_router)
 
 
 @app.get("/health")
