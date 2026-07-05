@@ -8,7 +8,7 @@ Build an AI-powered platform that ingests GitHub repositories, runs static analy
 
 - [ ] **Phase 1: Foundation & Authentication** - GitHub OAuth sign-in, project scaffolding, database schema, and deployment infrastructure
 - [x] **Phase 2: Project Management** - Create, view, edit, and delete evaluation projects (completed 2026-07-05)
-- [ ] **Phase 3: GitHub Integration & Repository Ingestion** - Ingest GitHub repos with language detection and large-repo handling (3/4 plans complete)
+- [x] **Phase 3: GitHub Integration & Repository Ingestion** - Ingest GitHub repos with language detection and large-repo handling (4/4 plans complete) ✅ Complete (2026-07-05)
 - [ ] **Phase 4: Static Code Analysis Pipeline** - Run static analysis tools to produce code quality metrics and composite scores
 - [ ] **Phase 5: Repository Mining Pipeline** - Analyze commit history, PRs, issues, and contributor statistics
 - [ ] **Phase 6: AI Evaluation Framework** - Build the agent orchestration architecture with source grounding and rubric scoring
@@ -54,7 +54,7 @@ Plans:
 - [x] 02-02-PLAN.md — Frontend: Project List & Create (cards, grid, create form, sidebar update)
 - [x] 02-03-PLAN.md — Frontend: Project Detail & Edit & Delete (detail tabs, edit form, delete dialog) ✅ Complete
 
-### Phase 3: GitHub Integration & Repository Ingestion
+### Phase 3: GitHub Integration & Repository Ingestion ✅ Complete (2026-07-05)
 **Goal**: Users can ingest GitHub repositories into projects for evaluation
 **Depends on**: Phase 2
 **Requirements**: REPO-01, REPO-02, REPO-03
@@ -71,7 +71,7 @@ Plans:
 - [x] 03-01-PLAN.md — Backend: Repo Data Model, Migration & API Endpoints ✅ Complete
 - [x] 03-02-PLAN.md — Backend: Ingestion Pipeline with Celery, Clone & Checkpoint Recovery ✅ Complete
 - [x] 03-03-PLAN.md — Frontend: Repo UI Components (badge, progress panel, form field, hook) ✅ Complete
-- [ ] 03-04-PLAN.md — Frontend: Integration into Forms, Detail Page & Project Cards
+- [x] 03-04-PLAN.md — Frontend: Integration into Forms, Detail Page & Project Cards ✅ Complete
 
 ### Phase 4: Static Code Analysis Pipeline
 **Goal**: System produces deterministic code quality metrics from ingested repository code
@@ -152,8 +152,8 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
-| 2. Project Management | 3/3 | Complete   | 2026-07-05 |
-| 3. GitHub Integration & Repository Ingestion | 3/4 | In Progress|  |
+| 2. Project Management | 3/3 | ✅ Complete | 2026-07-05 |
+| 3. GitHub Integration & Repository Ingestion | 4/4 | ✅ Complete | 2026-07-05 |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
 | 6. AI Evaluation Framework | 0/0 | Not started | - |

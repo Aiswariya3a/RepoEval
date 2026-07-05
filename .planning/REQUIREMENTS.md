@@ -13,8 +13,8 @@
 
 ### Repository Ingestion
 
-- [ ] **REPO-01**: User can ingest a GitHub repository by providing its URL
-- [ ] **REPO-02**: System automatically detects repository language composition and tech stack
+- [x] **REPO-01**: User can ingest a GitHub repository by providing its URL (Phase 3)
+- [x] **REPO-02**: System automatically detects repository language composition and tech stack (Phase 3)
 - [ ] **REPO-03**: System handles large repositories with pagination and rate-limit awareness
 
 ### Static Code Analysis
