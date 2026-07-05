@@ -73,23 +73,23 @@ Plans:
 - [x] 03-03-PLAN.md — Frontend: Repo UI Components (badge, progress panel, form field, hook) ✅ Complete
 - [x] 03-04-PLAN.md — Frontend: Integration into Forms, Detail Page & Project Cards ✅ Complete
 
-### Phase 4: Static Code Analysis Pipeline
+### Phase 4: Static Code Analysis Pipeline ✅ Complete (2026-07-05)
 **Goal**: System produces deterministic code quality metrics from ingested repository code
 **Depends on**: Phase 3
 **Requirements**: SCA-01, SCA-02, SCA-03
 **Success Criteria** (what must be TRUE):
-  1. System runs static analysis on all major languages detected in the repository
-  2. User can view code quality metrics: complexity scores, duplication percentage, maintainability index, and lint issue counts
-  3. System produces a composite code quality score for the repository
-  4. Analysis results are available per-language and aggregated across the codebase
+   1. System runs static analysis on all major languages detected in the repository
+   2. User can view code quality metrics: complexity scores, duplication percentage, maintainability index, and lint issue counts
+   3. System produces a composite code quality score for the repository
+   4. Analysis results are available per-language and aggregated across the codebase
 **Plans**: 4 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 04-01-PLAN.md — Backend: Data Models, Analyzers, File Importance, Duplication Detection
-- [ ] 04-02-PLAN.md — Backend: Pipeline, API Endpoints, Celery Tasks
-- [ ] 04-03-PLAN.md — Frontend: API Client, Polling Hook, Analysis UI Components
-- [ ] 04-04-PLAN.md — Frontend: Integration into Project Detail & Project Cards
+- [x] 04-01-PLAN.md — Backend: Data Models, Analyzers, File Importance, Duplication Detection ✅ Complete
+- [x] 04-02-PLAN.md — Backend: Pipeline, API Endpoints, Celery Tasks ✅ Complete
+- [x] 04-03-PLAN.md — Frontend: API Client, Polling Hook, Analysis UI Components ✅ Complete
+- [x] 04-04-PLAN.md — Frontend: Integration into Project Detail & Project Cards ✅ Complete
 
 ### Phase 5: Repository Mining Pipeline
 **Goal**: System extracts and surfaces historical project data from commits, PRs, and issues
@@ -160,7 +160,7 @@ Plans:
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
 | 2. Project Management | 3/3 | ✅ Complete | 2026-07-05 |
 | 3. GitHub Integration & Repository Ingestion | 4/4 | Complete   | 2026-07-05 |
-| 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
+| 4. Static Code Analysis Pipeline | 4/4 | ✅ Complete   | 2026-07-05 |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
 | 6. AI Evaluation Framework | 0/0 | Not started | - |
 | 7. AI Assessment Dimensions | 0/0 | Not started | - |

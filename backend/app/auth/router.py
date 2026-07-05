@@ -1,6 +1,8 @@
+import logging
 import uuid
 import secrets
 from datetime import datetime, timezone, timedelta
+from urllib.parse import quote
 
 from fastapi import APIRouter, Request, Response, Depends, HTTPException, status
 from sqlalchemy import select
@@ -21,6 +23,7 @@ from app.auth.schemas import UserResponse
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 settings = Settings()
+logger = logging.getLogger(__name__)
 
 ACCESS_COOKIE_NAME = "access_token"
 REFRESH_COOKIE_NAME = "refresh_token"
@@ -58,20 +61,30 @@ def _clear_auth_cookies(response: Response) -> None:
     response.delete_cookie(key=STATE_COOKIE_NAME, path="/api/auth")
 
 
+def _build_authorize_url(state: str) -> str:
+    redirect_uri = settings.github_redirect_uri
+    print(f"[oauth] client_id={settings.github_client_id} redirect_uri={redirect_uri}")
+    logger.info(
+        "GitHub OAuth login request: client_id=%s redirect_uri=%s",
+        settings.github_client_id,
+        redirect_uri,
+    )
+    return (
+        "https://github.com/login/oauth/authorize"
+        f"?client_id={quote(settings.github_client_id, safe='')}"
+        f"&redirect_uri={quote(redirect_uri, safe='')}"
+        f"&state={state}"
+        "&scope=read:user+user:email"
+    )
+
+
 @router.get("/login")
 async def login():
     state = secrets.token_urlsafe(32)
+    authorize_url = _build_authorize_url(state)
     redirect_url = Response(
         status_code=status.HTTP_307_TEMPORARY_REDIRECT,
-        headers={
-            "Location": (
-                f"https://github.com/login/oauth/authorize"
-                f"?client_id={settings.github_client_id}"
-                f"&redirect_uri={settings.github_redirect_uri}"
-                f"&state={state}"
-                f"&scope=read:user+user:email"
-            )
-        },
+        headers={"Location": authorize_url},
     )
     redirect_url.set_cookie(
         key=STATE_COOKIE_NAME,
@@ -116,6 +129,12 @@ async def callback(
         )
         _clear_auth_cookies(redirect)
         return redirect
+
+    logger.info(
+        "GitHub OAuth callback exchange: client_id=%s redirect_uri=%s",
+        settings.github_client_id,
+        settings.github_redirect_uri,
+    )
 
     async with httpx.AsyncClient() as client:
         token_resp = await client.post(

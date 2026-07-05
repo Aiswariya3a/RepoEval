@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 4 context gathered
-last_updated: "2026-07-05T09:17:31.048Z"
-last_activity: 2026-07-05 -- Phase 03 Plan 04 completed
+status: active
+stopped_at: ""
+last_updated: "2026-07-05T10:30:00.000Z"
+last_activity: 2026-07-05 -- Phase 04 Plan 04 completed
 progress:
   total_phases: 9
-  completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
-  percent: 33
+  completed_phases: 4
+  total_plans: 15
+  completed_plans: 15
+  percent: 44
 ---
 
 # Project State
@@ -21,23 +21,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-28)
 
 **Core value:** Automatically generate objective, rubric-based evaluation reports for any GitHub repository within minutes — identifying risks, strengths, weaknesses, and actionable recommendations.
-**Current focus:** Phase 03 — GitHub Integration & Repository Ingestion
+**Current focus:** Phase 04 — Static Code Analysis Pipeline
 
 ## Current Position
 
-Phase: 03 (GitHub Integration & Repository Ingestion) — COMPLETE
+Phase: 04 (Static Code Analysis Pipeline) — COMPLETE
 Plan: 4 of 4 (Plan 04 complete)
-Status: Phase complete — ready for verification
-Last activity: 2026-07-05 -- Phase 03 Plan 04 completed
+Status: Phase 4 complete — ready for verification
+Last activity: 2026-07-05 -- Phase 04 Plan 04 completed
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 11
-- Total plans created: 4 (Phase 3, planned)
-- Average duration: ~0.18h
-- Total execution time: ~2.0 hours
+- Total plans completed: 15
+- Total plans created: 4 (Phase 4, planned)
+- Average duration: ~0.10h
+- Total execution time: ~2.3 hours
 
 **By Phase:**
 
@@ -46,6 +46,7 @@ Last activity: 2026-07-05 -- Phase 03 Plan 04 completed
 | 01    | 4 / 4 | 4     | ~0.19h   |
 | 02    | 3 / 3 | 3     | ~0.10h   |
 | 03    | 4 / 4 | 4     | ~0.10h   |
+| 04    | 4 / 4 | 4     | ~0.08h   |
 
 ## Accumulated Context
 
@@ -74,6 +75,27 @@ Recent decisions affecting current work:
 - (Phase 3): D-48 — Each ingestion creates immutable snapshot linked to commit SHA
 - (Phase 3): D-49 — Re-ingestion creates new snapshot, preserves old analyses
 - (Phase 3): D-50 — Checkpoint-based retry, resume from last successful stage
+
+- (Phase 4): D-01 — Python-first — ruff, radon, bandit only (no JS/TS/Go/Java)
+- (Phase 4): D-02 — Ruff for linting
+- (Phase 4): D-03 — Radon for complexity metrics
+- (Phase 4): D-04 — Bandit for security scanning
+- (Phase 4): D-05 — Skip mypy
+- (Phase 4): D-06 — Manual trigger — user clicks "Analyze" button
+- (Phase 4): D-07 — Checkpointed sequential stages with concurrent execution inside each stage
+- (Phase 4): D-08 — Independent analyzers execute concurrently via asyncio.gather()
+- (Phase 4): D-09 — Resume from failed analyzer or stage — not a full restart
+- (Phase 4): D-10 — 3-layer data model: StaticAnalysisRun, StaticAnalysisToolResult, CodeQualityReport
+- (Phase 4): D-11 — Dashboard queries CodeQualityReport primarily
+- (Phase 4): D-12 — RepositorySnapshot stays pure — no analysis fields added
+- (Phase 4): D-13 — Composite score is reference metric, not final grade
+- (Phase 4): D-14 — Weighted average of normalized sub-scores (0-100 each)
+- (Phase 4): D-15 — Composite score feeds into Phase 6+ AI evaluation as supporting evidence
+- (Phase 4): D-16 — File importance score (0-100) for every source file
+- (Phase 4): D-17 — Importance index = canonical ranking for ALL downstream phases
+- (Phase 4): D-18 — Lightweight (Ruff lint) on ALL files; deep (Radon/Bandit) on top-ranked files
+- (Phase 4): D-19 — Ignore generated/vendor/test/binary files (extend _is_ignored pattern)
+- (Phase 4): D-20 — Process files in batches of 50-100 with checkpointing
 
 - (Phase 2): DeleteProjectDialog uses controlled modal with backdrop overlay
 - (Phase 2): Duplicate creates project with "(copy)" suffix and navigates to new project
@@ -111,7 +133,13 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-05T09:17:31.036Z
-Stopped at: Phase 4 context gathered
+Last session: 2026-07-05T10:30:00.000Z
+Stopped at: Phase 4 execution complete
 Resume file: .planning/phases/04-static-code-analysis-pipeline/04-CONTEXT.md
-Next: Verify Phase 3 — Transition to Phase 4 (Static Code Analysis)
+Next: Verify Phase 4 — Transition to Phase 5 (Repository Mining Pipeline)
+
+## Next Phase Ready
+
+Phase 5 (Repository Mining Pipeline) — requires discussion and planning.
+Phase 5 depends on Phase 3's ingested commit/PR/issue data.
+Key integration point: RepositorySnapshot stored data for mining in Phase 3.

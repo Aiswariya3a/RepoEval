@@ -1,5 +1,10 @@
-from pydantic_settings import BaseSettings
+from pathlib import Path
 from typing import List
+
+from pydantic_settings import BaseSettings
+
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
 
 
 class Settings(BaseSettings):
@@ -13,7 +18,7 @@ class Settings(BaseSettings):
 
     github_client_id: str = ""
     github_client_secret: str = ""
-    github_redirect_uri: str = "http://localhost:8000/api/auth/callback"
+    github_redirect_uri: str = "http://0.0.0.0:8000/api/auth/callback"
 
     jwt_private_key_path: str = "./keys/private.pem"
     jwt_public_key_path: str = "./keys/public.pem"
@@ -50,4 +55,8 @@ class Settings(BaseSettings):
     def cors_origins(self) -> List[str]:
         return [self.frontend_url]
 
-    model_config = {"env_prefix": "REPOEVAL_"}
+    model_config = {
+        "env_prefix": "REPOEVAL_",
+        "env_file": str(ROOT_DIR / ".env"),
+        "extra": "ignore",
+    }

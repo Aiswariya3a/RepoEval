@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 from githubkit import GitHub, UnauthAuthStrategy
-from githubkit.retry import RetryChainDecider, RetryRateLimit
+from githubkit.retry import RetryRateLimit
 from githubkit.exception import RateLimitExceeded
 
 from app.ingestion.rate_limiter import RateLimiter
