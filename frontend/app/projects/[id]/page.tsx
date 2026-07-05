@@ -38,6 +38,17 @@ import {
   retryIngestion,
 } from "@/lib/api-repos";
 import type { Repo } from "@/lib/api-repos";
+import { triggerAnalysis, getAnalysisResults } from "@/lib/api-analysis";
+import type { AnalysisStatus, CodeQualityReport } from "@/lib/api-analysis";
+import { isAnalysisTerminal } from "@/lib/api-analysis";
+import { AnalyzeButton } from "@/components/analysis/analyze-button";
+import {
+  AnalysisProgressPanel,
+  AnalysisProgressSkeleton,
+} from "@/components/analysis/analysis-progress-panel";
+import { AnalysisResultsDisplay } from "@/components/analysis/analysis-results-display";
+import { AnalysisBadge } from "@/components/analysis/analysis-badge";
+import { useAnalysisPolling } from "@/lib/use-analysis-polling";
 
 const PREDEFINED_TAGS = [
   "Frontend",
@@ -110,6 +121,12 @@ export default function ProjectDetailPage() {
   const [reposLoading, setReposLoading] = useState(true);
   const [repoEntries, setRepoEntries] = useState<RepoEntry[]>([]);
   const [activeRepoId, setActiveRepoId] = useState<string | null>(null);
+
+  // ── Analysis state ────────────────────────────────────
+  const [activeAnalysisRepoId, setActiveAnalysisRepoId] = useState<string | null>(null);
+  const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus | null>(null);
+  const [analysisResults, setAnalysisResults] = useState<CodeQualityReport | null>(null);
+  const [analysisPollingEnabled, setAnalysisPollingEnabled] = useState(false);
 
   // ── Menu state ──────────────────────────────────────
   const [menuOpen, setMenuOpen] = useState(false);
@@ -193,6 +210,37 @@ export default function ProjectDetailPage() {
     activeRepoId,
     activeRepoId !== null
   );
+
+  // ── Analysis polling ───────────────────────────────
+  const {
+    status: polledAnalysisStatus,
+    steps: analysisSteps,
+    elapsedSeconds: analysisElapsed,
+    error: analysisError,
+    isLoading: analysisLoading,
+    refetch: refetchAnalysis,
+  } = useAnalysisPolling(
+    projectId,
+    activeAnalysisRepoId,
+    analysisPollingEnabled
+  );
+
+  // ── Sync polling status → state + fetch results on completion ──
+  useEffect(() => {
+    if (polledAnalysisStatus) {
+      setAnalysisStatus(polledAnalysisStatus);
+
+      if (isAnalysisTerminal(polledAnalysisStatus)) {
+        setAnalysisPollingEnabled(false);
+
+        if (polledAnalysisStatus === "complete" && activeAnalysisRepoId) {
+          getAnalysisResults(projectId, activeAnalysisRepoId)
+            .then(setAnalysisResults)
+            .catch(() => {});
+        }
+      }
+    }
+  }, [polledAnalysisStatus, projectId, activeAnalysisRepoId]);
 
   // ── Close menu on outside click ──────────────────────
   useEffect(() => {
@@ -290,6 +338,19 @@ export default function ProjectDetailPage() {
       router.push(`/projects/${newProject.id}`);
     } catch (err) {
       setDuplicating(false);
+    }
+  }
+
+  // ── Analysis trigger ───────────────────────────────
+  async function handleAnalyze(repoId: string) {
+    setActiveAnalysisRepoId(repoId);
+    setAnalysisStatus("queued");
+    setAnalysisResults(null);
+    setAnalysisPollingEnabled(true);
+    try {
+      await triggerAnalysis(projectId, repoId);
+    } catch (err) {
+      // Error handled by polling hook
     }
   }
 
@@ -506,6 +567,9 @@ export default function ProjectDetailPage() {
                       {/* Status row */}
                       <div className="flex items-center gap-2 mt-2">
                         <IngestionBadge status={repo.ingestion_status} />
+                        {activeAnalysisRepoId === repo.id && analysisStatus && (
+                          <AnalysisBadge status={analysisStatus} />
+                        )}
                       </div>
 
                       {/* Action row */}
@@ -550,6 +614,49 @@ export default function ProjectDetailPage() {
                           elapsedSeconds={pollingState.elapsedSeconds}
                           error={pollingState.error}
                         />
+                      )}
+
+                      {/* Analysis section — only when ingestion complete */}
+                      {repo.ingestion_status === "complete" && (
+                        <div className="mt-3 pt-3 border-t border-border">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                              Code Analysis
+                            </span>
+                            {activeAnalysisRepoId === repo.id && analysisStatus && (
+                              <AnalysisBadge status={analysisStatus} />
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <AnalyzeButton
+                              repoId={repo.id}
+                              status={activeAnalysisRepoId === repo.id ? analysisStatus : null}
+                              onAnalyze={handleAnalyze}
+                              disabled={activeAnalysisRepoId !== null && activeAnalysisRepoId !== repo.id}
+                            />
+                          </div>
+
+                          {activeAnalysisRepoId === repo.id && analysisPollingEnabled && polledAnalysisStatus && !isAnalysisTerminal(polledAnalysisStatus) && (
+                            <AnalysisProgressPanel
+                              repoName={repo.full_name}
+                              status={polledAnalysisStatus}
+                              steps={analysisSteps}
+                              elapsedSeconds={analysisElapsed}
+                              error={analysisError}
+                            />
+                          )}
+
+                          {activeAnalysisRepoId === repo.id && analysisResults && (
+                            <div className="mt-3">
+                              <AnalysisResultsDisplay
+                                report={analysisResults}
+                                onReAnalyze={() => handleAnalyze(repo.id)}
+                                isAnalyzing={analysisPollingEnabled}
+                              />
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   ))}
