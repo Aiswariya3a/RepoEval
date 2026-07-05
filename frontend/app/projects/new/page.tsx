@@ -3,33 +3,12 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { X, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { TagSelector } from "@/components/dashboard/tag-selector";
 import { createProject } from "@/lib/api-projects";
 import type { ProjectCreate } from "@/lib/api-projects";
-
-const PREDEFINED_TAGS = [
-  "Frontend",
-  "Backend",
-  "Full Stack",
-  "Mobile",
-  "AI/ML",
-  "Data Science",
-  "DevOps",
-  "Cloud",
-  "Open Source",
-  "Research",
-  "Hackathon",
-  "Capstone",
-  "Enterprise",
-  "Library",
-  "API",
-  "Microservices",
-  "CLI",
-  "Web Application",
-] as const;
 
 const NAME_REGEX = /^[a-zA-Z0-9 _-]+$/;
 
@@ -47,38 +26,12 @@ export default function NewProjectPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [customTag, setCustomTag] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
 
   function handleNameBlur() {
     setNameError(validateName(name));
-  }
-
-  function toggleTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-    );
-  }
-
-  function addCustomTag() {
-    const tag = customTag.trim();
-    if (tag && !selectedTags.includes(tag)) {
-      setSelectedTags((prev) => [...prev, tag]);
-    }
-    setCustomTag("");
-  }
-
-  function handleCustomTagKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addCustomTag();
-    }
-  }
-
-  function removeTag(tag: string) {
-    setSelectedTags((prev) => prev.filter((t) => t !== tag));
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -192,78 +145,11 @@ export default function NewProjectPage() {
             </div>
 
             {/* Tags field */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Tags</label>
-
-              {/* Predefined tags */}
-              <div className="flex flex-wrap gap-1.5">
-                {PREDEFINED_TAGS.map((tag) => {
-                  const isSelected = selectedTags.includes(tag);
-                  return (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => toggleTag(tag)}
-                      disabled={submitting}
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
-                        isSelected
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      } disabled:opacity-50`}
-                    >
-                      {tag}
-                      {isSelected && <X className="size-3" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Custom tag input */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={customTag}
-                  onChange={(e) => setCustomTag(e.target.value)}
-                  onKeyDown={handleCustomTagKeyDown}
-                  placeholder="Add custom tag..."
-                  disabled={submitting}
-                  className="flex h-8 w-48 rounded-lg border border-border bg-background px-2.5 py-1 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="xs"
-                  onClick={addCustomTag}
-                  disabled={!customTag.trim() || submitting}
-                  aria-label="Add custom tag"
-                >
-                  <Plus className="size-3" />
-                </Button>
-              </div>
-
-              {/* Selected tags display */}
-              {selectedTags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {selectedTags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-xs font-medium"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        disabled={submitting}
-                        className="hover:text-destructive transition-colors disabled:opacity-50"
-                        aria-label={`Remove ${tag}`}
-                      >
-                        <X className="size-3" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+            <TagSelector
+              selectedTags={selectedTags}
+              onChange={setSelectedTags}
+              disabled={submitting}
+            />
           </CardContent>
 
           <CardFooter className="flex items-center justify-between">
