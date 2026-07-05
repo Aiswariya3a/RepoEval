@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export function WelcomeEmptyState() {
@@ -7,9 +8,11 @@ export function WelcomeEmptyState() {
       <p className="text-muted-foreground mb-6">
         Evaluate your first repository to get started.
       </p>
-      <Button size="default">
-        Create Project
-      </Button>
+      <Link href="/projects/new">
+        <Button size="default">
+          Create Project
+        </Button>
+      </Link>
     </div>
   );
 }
