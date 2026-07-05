@@ -28,3 +28,6 @@ class Project(Base):
     )
 
     owner: Mapped["User"] = relationship(back_populates="projects")
+    repos: Mapped[list["Repo"]] = relationship(
+        back_populates="project", cascade="all, delete-orphan"
+    )
