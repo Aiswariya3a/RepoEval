@@ -26,6 +26,26 @@ class Settings(BaseSettings):
     temp_clone_path: str = "/tmp/repoeval_clones"
     github_token_refresh_threshold: int = 300
 
+    # ── Analysis settings ──────────────────────────────
+    analysis_batch_size: int = 50
+    analysis_deep_analysis_threshold: int = 50
+    analysis_max_files: int = 10000
+    analysis_timeout_per_tool: int = 300
+
+    # Importance score weights (must sum to 1.0 for weight-bearing heuristics)
+    importance_weight_loc: float = 0.15
+    importance_weight_complexity: float = 0.20
+    importance_weight_entry_point: float = 0.25
+    importance_weight_centrality: float = 0.20
+    importance_weight_recency: float = 0.10
+    importance_weight_directory: float = 0.10
+
+    # Composite score weights
+    score_weight_lint: float = 0.30
+    score_weight_complexity: float = 0.30
+    score_weight_security: float = 0.25
+    score_weight_duplication: float = 0.15
+
     @property
     def cors_origins(self) -> List[str]:
         return [self.frontend_url]

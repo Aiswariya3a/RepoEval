@@ -10,6 +10,7 @@ if config.config_file_name is not None:
 
 from app.database import Base
 from app.models import User, Session, Project, Repo, RepositorySnapshot  # noqa: F401
+from app.analysis import models  # noqa: F401 — analysis tables for autogenerate detection
 
 target_metadata = Base.metadata
 
