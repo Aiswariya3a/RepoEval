@@ -21,6 +21,23 @@ import {
 } from "@/lib/api-projects";
 import type { Project, ProjectUpdate } from "@/lib/api-projects";
 import { DeleteProjectDialog } from "@/components/dashboard/delete-project-dialog";
+import { ReposField } from "@/components/repos/repos-field";
+import type { RepoEntry } from "@/components/repos/repos-field";
+import { IngestionBadge } from "@/components/repos/ingestion-badge";
+import { IngestButton } from "@/components/repos/ingest-button";
+import {
+  IngestionProgressPanel,
+  IngestionProgressSkeleton,
+} from "@/components/repos/ingestion-progress-panel";
+import { useIngestionPolling } from "@/lib/use-ingestion-polling";
+import {
+  listProjectRepos,
+  addProjectRepo,
+  removeProjectRepo,
+  triggerIngestion,
+  retryIngestion,
+} from "@/lib/api-repos";
+import type { Repo } from "@/lib/api-repos";
 
 const PREDEFINED_TAGS = [
   "Frontend",
@@ -88,6 +105,12 @@ export default function ProjectDetailPage() {
     "overview"
   );
 
+  // ── Repo state ──────────────────────────────────────
+  const [repos, setRepos] = useState<Repo[]>([]);
+  const [reposLoading, setReposLoading] = useState(true);
+  const [repoEntries, setRepoEntries] = useState<RepoEntry[]>([]);
+  const [activeRepoId, setActiveRepoId] = useState<string | null>(null);
+
   // ── Menu state ──────────────────────────────────────
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -133,6 +156,43 @@ export default function ProjectDetailPage() {
   useEffect(() => {
     fetchProject();
   }, [fetchProject]);
+
+  // ── Fetch repos ──────────────────────────────────────
+  const fetchRepos = useCallback(async () => {
+    if (!projectId) return;
+    try {
+      const data = await listProjectRepos(projectId);
+      setRepos(data);
+    } catch {
+      // Repos endpoint may not be available yet
+    } finally {
+      setReposLoading(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (project) {
+      fetchRepos();
+    }
+  }, [project, fetchRepos]);
+
+  // ── Set active repo for polling ──────────────────────
+  useEffect(() => {
+    const running = repos.find(
+      (r) =>
+        r.ingestion_status !== "complete" &&
+        r.ingestion_status !== "failed" &&
+        r.ingestion_status !== "pending"
+    );
+    setActiveRepoId(running?.id ?? null);
+  }, [repos]);
+
+  // ── Ingestion polling ────────────────────────────────
+  const pollingState = useIngestionPolling(
+    projectId,
+    activeRepoId,
+    activeRepoId !== null
+  );
 
   // ── Close menu on outside click ──────────────────────
   useEffect(() => {
@@ -293,7 +353,7 @@ export default function ProjectDetailPage() {
             </span>
             <span className="flex items-center gap-1">
               <GitBranch className="size-3.5" />
-              0 repos
+              {repos.length} {repos.length === 1 ? "repo" : "repos"}
             </span>
           </div>
         </div>
@@ -378,6 +438,126 @@ export default function ProjectDetailPage() {
       {/* ── Overview Tab ────────────────────────────── */}
       {activeTab === "overview" && (
         <div className="space-y-6">
+          {/* ── Repositories Section ─────────────────── */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Repositories</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Repo URL input for adding repos */}
+              <ReposField repos={repoEntries} onChange={setRepoEntries} />
+
+              {/* Add button */}
+              <Button
+                variant="default"
+                size="sm"
+                onClick={async () => {
+                  for (const entry of repoEntries) {
+                    if (!entry.id) {
+                      try {
+                        await addProjectRepo(projectId, entry.url);
+                      } catch {
+                        /* ignore duplicates */
+                      }
+                    }
+                  }
+                  setRepoEntries([]);
+                  await fetchRepos();
+                }}
+                disabled={repoEntries.filter((r) => !r.id).length === 0}
+              >
+                Add to Project
+              </Button>
+
+              {/* Repo list */}
+              {reposLoading ? (
+                <IngestionProgressSkeleton />
+              ) : repos.length === 0 ? (
+                <p className="text-sm text-muted-foreground italic py-4 text-center">
+                  No repositories added yet.
+                  <br />
+                  Add a GitHub repository URL to start evaluating your project.
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  {repos.map((repo) => (
+                    <div
+                      key={repo.id}
+                      className="rounded-lg border border-border p-4"
+                    >
+                      {/* Repo header */}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-sm">{repo.full_name}</p>
+                          <p className="text-xs text-muted-foreground font-mono truncate max-w-md">
+                            {repo.url}
+                          </p>
+                        </div>
+                        {repo.language_percentages && (
+                          <div className="text-xs text-muted-foreground text-right">
+                            {Object.entries(repo.language_percentages)
+                              .slice(0, 3)
+                              .map(([lang, pct]) => `${lang} ${pct}%`)
+                              .join(", ")}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Status row */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <IngestionBadge status={repo.ingestion_status} />
+                      </div>
+
+                      {/* Action row */}
+                      <div className="flex items-center gap-2 mt-3">
+                        <IngestButton
+                          repoId={repo.id}
+                          status={repo.ingestion_status}
+                          onIngest={async () => {
+                            if (
+                              repo.ingestion_status === "failed" ||
+                              repo.ingestion_status === "paused"
+                            ) {
+                              await retryIngestion(projectId, repo.id);
+                            } else {
+                              await triggerIngestion(projectId, repo.id);
+                            }
+                            await fetchRepos();
+                          }}
+                          disabled={activeRepoId !== null && activeRepoId !== repo.id}
+                        />
+
+                        {/* Remove button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={async () => {
+                            await removeProjectRepo(projectId, repo.id);
+                            await fetchRepos();
+                          }}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+
+                      {/* Progress panel for active/completed/failed repos */}
+                      {activeRepoId === repo.id && (
+                        <IngestionProgressPanel
+                          repoName={repo.full_name}
+                          status={pollingState.status}
+                          steps={pollingState.steps}
+                          elapsedSeconds={pollingState.elapsedSeconds}
+                          error={pollingState.error}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Description */}
           <Card>
             <CardHeader>
@@ -524,27 +704,6 @@ export default function ProjectDetailPage() {
                     disabled={saving}
                     className="flex w-full rounded-lg border border-border bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 resize-y min-h-[60px]"
                   />
-                </div>
-
-                {/* Repo URLs field (decorative) */}
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="settings-repo-urls"
-                    className="text-sm font-medium"
-                  >
-                    Repository URLs
-                  </label>
-                  <input
-                    id="settings-repo-urls"
-                    type="text"
-                    placeholder="https://github.com/owner/repo"
-                    disabled
-                    className="flex h-9 w-full rounded-lg border border-border bg-muted/50 px-3 py-1 text-sm shadow-sm text-muted-foreground cursor-not-allowed"
-                    title="Repo URLs will be available for setup in a future update"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Repo URLs will be available for setup in a future update.
-                  </p>
                 </div>
 
                 {/* Tags field */}
