@@ -589,6 +589,11 @@ export default function ProjectDetailPage() {
                             await fetchRepos();
                           }}
                           disabled={activeRepoId !== null && activeRepoId !== repo.id}
+                          disabledReason={
+                            activeAnalysisRepoId !== null && activeAnalysisRepoId !== repo.id
+                              ? "Analysis in progress on another repo"
+                              : undefined
+                          }
                         />
 
                         {/* Remove button */}

@@ -16,11 +16,13 @@ export function IngestButton({
   status,
   onIngest,
   disabled = false,
+  disabledReason,
 }: {
   repoId: string;
   status: IngestionStatus;
   onIngest: (repoId: string) => Promise<void>;
   disabled?: boolean;
+  disabledReason?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -68,6 +70,25 @@ export function IngestButton({
     }
   }
 
+  // ── Tooltip helper ──────────────────────────────
+  function maybeTooltip(button: React.ReactNode) {
+    if (disabled && !loading && disabledReason) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <span tabIndex={0}>{button}</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{disabledReason}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+    return <>{button}</>;
+  }
+
   // ── Button rendering ────────────────────────────
 
   if (isRunning) {
@@ -93,21 +114,23 @@ export function IngestButton({
   if (status === "complete") {
     return (
       <>
-        <Button
-          variant="default"
-          onClick={handleClick}
-          disabled={disabled || loading}
-          className="bg-[#10B981] hover:bg-[#10B981]/80 text-white"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="size-3.5 mr-1.5 animate-spin" />
-              Re-ingesting…
-            </>
-          ) : (
-            "Re-ingest"
-          )}
-        </Button>
+        {maybeTooltip(
+          <Button
+            variant="default"
+            onClick={handleClick}
+            disabled={disabled || loading}
+            className="bg-[#10B981] hover:bg-[#10B981]/80 text-white"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+                Re-ingesting…
+              </>
+            ) : (
+              "Re-ingest"
+            )}
+          </Button>
+        )}
         {showConfirm && confirmAction === "reingest" && (
           <ReIngestConfirmDialog
             onConfirm={handleConfirm}
@@ -121,20 +144,22 @@ export function IngestButton({
   if (status === "failed" || status === "paused") {
     return (
       <>
-        <Button
-          variant="destructive"
-          onClick={handleClick}
-          disabled={disabled || loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="size-3.5 mr-1.5 animate-spin" />
-              Retrying…
-            </>
-          ) : (
-            "Retry"
-          )}
-        </Button>
+        {maybeTooltip(
+          <Button
+            variant="destructive"
+            onClick={handleClick}
+            disabled={disabled || loading}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="size-3.5 mr-1.5 animate-spin" />
+                Retrying…
+              </>
+            ) : (
+              "Retry"
+            )}
+          </Button>
+        )}
         {showConfirm && confirmAction === "retry" && (
           <RetryConfirmDialog
             onConfirm={handleConfirm}
@@ -146,7 +171,7 @@ export function IngestButton({
   }
 
   // Default: pending
-  return (
+  return maybeTooltip(
     <Button
       variant="default"
       onClick={handleClick}
