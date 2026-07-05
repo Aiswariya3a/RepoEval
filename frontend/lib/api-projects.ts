@@ -1,4 +1,5 @@
 import { fetchApi } from "@/lib/auth";
+import type { IngestionStatus } from "@/lib/api-repos";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -7,6 +8,8 @@ export interface Project {
   name: string;
   description: string | null;
   tags: string[] | null;
+  repo_count: number;
+  ingestion_status: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -15,6 +18,7 @@ export interface ProjectCreate {
   name: string;
   description?: string;
   tags?: string[];
+  repo_urls?: string[];
 }
 
 export interface ProjectUpdate {

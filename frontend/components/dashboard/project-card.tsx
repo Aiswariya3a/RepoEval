@@ -3,6 +3,7 @@ import { Calendar, GitBranch, MoreHorizontal } from "lucide-react";
 
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { IngestionBadge, getAggregateBadgeLabel } from "@/components/repos/ingestion-badge";
 import type { Project } from "@/lib/api-projects";
 
 function formatDate(dateString: string): string {
@@ -45,15 +46,22 @@ export function ProjectCard({ project }: { project: Project }) {
         )}
 
         <CardFooter>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground w-full">
             <span className="flex items-center gap-1">
               <Calendar className="size-3.5" />
               {formatDate(project.created_at)}
             </span>
             <span className="flex items-center gap-1">
               <GitBranch className="size-3.5" />
-              0 repos
+              {project.repo_count} {project.repo_count === 1 ? "repo" : "repos"}
             </span>
+            {project.repo_count > 0 && project.ingestion_status && (
+              <span className="ml-auto">
+                <IngestionBadge
+                  status={project.ingestion_status as any}
+                />
+              </span>
+            )}
           </div>
         </CardFooter>
       </Card>
