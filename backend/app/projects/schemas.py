@@ -20,6 +20,7 @@ class ProjectResponse(BaseModel):
     name: str
     description: str | None = None
     tags: list[str] | None = None
+    repo_count: int = 0
     created_at: datetime
     updated_at: datetime
 

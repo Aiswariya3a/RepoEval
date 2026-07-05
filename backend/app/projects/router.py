@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.auth.dependencies import get_current_user
@@ -32,6 +33,7 @@ async def list_projects(
     result = await db.execute(
         select(Project)
         .where(Project.owner_id == user.id)
+        .options(selectinload(Project.repos))
         .order_by(Project.created_at.desc())
         .offset(offset)
         .limit(page_size)
@@ -40,8 +42,14 @@ async def list_projects(
 
     total_pages = math.ceil(total / page_size) if total > 0 else 0
 
+    responses = []
+    for p in projects:
+        resp = ProjectResponse.model_validate(p)
+        resp.repo_count = len(p.repos)
+        responses.append(resp)
+
     return ProjectListResponse(
-        items=[ProjectResponse.model_validate(p) for p in projects],
+        items=responses,
         total=total,
         page=page,
         page_size=page_size,
@@ -74,7 +82,9 @@ async def get_project(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        select(Project).where(Project.id == project_id, Project.owner_id == user.id)
+        select(Project)
+        .where(Project.id == project_id, Project.owner_id == user.id)
+        .options(selectinload(Project.repos))
     )
     project = result.scalar_one_or_none()
     if project is None:
@@ -82,7 +92,9 @@ async def get_project(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Project not found",
         )
-    return ProjectResponse.model_validate(project)
+    resp = ProjectResponse.model_validate(project)
+    resp.repo_count = len(project.repos)
+    return resp
 
 
 @router.patch("/{project_id}", response_model=ProjectResponse)
