@@ -82,8 +82,14 @@ Plans:
   2. User can view code quality metrics: complexity scores, duplication percentage, maintainability index, and lint issue counts
   3. System produces a composite code quality score for the repository
   4. Analysis results are available per-language and aggregated across the codebase
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 04-01-PLAN.md — Backend: Data Models, Analyzers, File Importance, Duplication Detection
+- [ ] 04-02-PLAN.md — Backend: Pipeline, API Endpoints, Celery Tasks
+- [ ] 04-03-PLAN.md — Frontend: API Client, Polling Hook, Analysis UI Components
+- [ ] 04-04-PLAN.md — Frontend: Integration into Project Detail & Project Cards
 
 ### Phase 5: Repository Mining Pipeline
 **Goal**: System extracts and surfaces historical project data from commits, PRs, and issues
