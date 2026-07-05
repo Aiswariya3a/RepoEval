@@ -7,7 +7,7 @@ Build an AI-powered platform that ingests GitHub repositories, runs static analy
 ## Phases
 
 - [ ] **Phase 1: Foundation & Authentication** - GitHub OAuth sign-in, project scaffolding, database schema, and deployment infrastructure
-- [ ] **Phase 2: Project Management** - Create, view, edit, and delete evaluation projects
+- [x] **Phase 2: Project Management** - Create, view, edit, and delete evaluation projects (completed 2026-07-05)
 - [ ] **Phase 3: GitHub Integration & Repository Ingestion** - Ingest GitHub repos with language detection and large-repo handling
 - [ ] **Phase 4: Static Code Analysis Pipeline** - Run static analysis tools to produce code quality metrics and composite scores
 - [ ] **Phase 5: Repository Mining Pipeline** - Analyze commit history, PRs, issues, and contributor statistics
@@ -146,7 +146,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Authentication | 4/4 | ✅ Complete | 2026-06-28 |
-| 2. Project Management | 3/3 | ✅ Complete | 2026-07-05 |
+| 2. Project Management | 3/3 | Complete   | 2026-07-05 |
 | 3. GitHub Integration & Repository Ingestion | 0/0 | Not started | - |
 | 4. Static Code Analysis Pipeline | 0/0 | Not started | - |
 | 5. Repository Mining Pipeline | 0/0 | Not started | - |
