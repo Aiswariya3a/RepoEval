@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     github_client_id: str = ""
     github_client_secret: str = ""
-    github_redirect_uri: str = "http://0.0.0.0:8000/api/auth/callback"
+    github_redirect_uri: str = "http://localhost:8000/api/auth/callback"
 
     jwt_private_key_path: str = "./keys/private.pem"
     jwt_public_key_path: str = "./keys/public.pem"
