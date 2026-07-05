@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.auth.dependencies import get_current_user
@@ -89,7 +88,7 @@ async def trigger_analysis(
     Enqueues a Celery task and returns immediately.
     """
     await _get_project(project_id, user, db)
-    repo = await _get_repo(repo_id, project_id, db)
+    await _get_repo(repo_id, project_id, db)
 
     # Verify repo has a completed snapshot
     result = await db.execute(

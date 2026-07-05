@@ -309,7 +309,7 @@ async def refresh_token(
         select(Session).where(
             Session.id == session_id,
             Session.user_id == user_id,
-            Session.revoked == False,
+            Session.revoked is False,
             Session.expires_at > datetime.now(timezone.utc),
         )
     )

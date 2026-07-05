@@ -1,11 +1,10 @@
-import asyncio
 import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import Settings
 from app.database import async_session
@@ -17,8 +16,6 @@ from app.analysis.analyzers import (
     RadonAnalyzer,
     BanditAnalyzer,
     _extract_source_files,
-    _filter_by_language,
-    ANALYZER_REGISTRY,
 )
 from app.analysis.scoring import FileImportanceScorer, CompositeScoreCalculator
 from app.analysis.duplication import DuplicateDetector
@@ -109,7 +106,7 @@ async def run_analysis(snapshot_id: uuid.UUID) -> None:
                 file_paths = [f["path"] for f in all_source_files]
                 # Process in batches per D-20
                 batch_size = settings.analysis_batch_size
-                all_issues = {"total_errors": 0, "total_warnings": 0, "issues": []}
+                all_issues: dict[str, Any] = {"total_errors": 0, "total_warnings": 0, "issues": []}
 
                 for i in range(0, len(file_paths), batch_size):
                     batch = file_paths[i:i + batch_size]
@@ -156,7 +153,7 @@ async def run_analysis(snapshot_id: uuid.UUID) -> None:
                 # Radon on all Python files for full complexity picture
                 # (batching per D-20 for large repos)
                 batch_size = settings.analysis_batch_size
-                aggregated = {
+                aggregated: dict[str, Any] = {
                     "avg_cyclomatic_complexity": 0,
                     "max_cyclomatic_complexity": 0,
                     "maintainability_index": 100,

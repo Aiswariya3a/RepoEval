@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 
 # ── Ingestion Types ──────────────────────────────

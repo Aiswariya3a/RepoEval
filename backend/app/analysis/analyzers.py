@@ -1,6 +1,5 @@
 import asyncio
 import json
-import os
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +24,7 @@ async def _run_tool(
     except asyncio.TimeoutError:
         proc.kill()
         raise TimeoutError(f"Tool timed out after {timeout}s: {' '.join(cmd[:3])}...")
-    return stdout.decode("utf-8", errors="replace"), stderr.decode("utf-8", errors="replace"), proc.returncode
+    return stdout.decode("utf-8", errors="replace"), stderr.decode("utf-8", errors="replace"), proc.returncode or 0
 
 
 def _is_analysis_ignored(path: Path) -> bool:

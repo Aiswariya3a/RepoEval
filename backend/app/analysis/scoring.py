@@ -1,6 +1,5 @@
 import math
 from pathlib import Path
-from typing import Any
 
 from app.config import Settings
 
@@ -82,7 +81,6 @@ class FileImportanceScorer:
         """Compute the 0-100 importance score for a single file using weighted heuristics."""
         path_obj = Path(path)
         parts = list(path_obj.parts)
-        filename = path_obj.name
 
         # Entry-point score (0-100)
         entry_score = 100 if cls._is_entry_point(path) else 0

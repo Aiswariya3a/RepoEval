@@ -1,9 +1,7 @@
 import asyncio
-import json
 import os
 import shutil
 
-import tempfile
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -137,7 +135,7 @@ async def ingest_repo(repo_id: uuid.UUID) -> None:
                     pr_data={"pull_requests": prs},
                     issue_data={"issues": issues},
                     total_commits=len(commits),
-                    total_files=_count_files(file_tree),
+                    total_files=_count_files(file_tree or {}),
                     total_prs=len(prs),
                     total_issues=len(issues),
                 )
@@ -157,9 +155,11 @@ async def ingest_repo(repo_id: uuid.UUID) -> None:
                 shutil.rmtree(str(clone_path), ignore_errors=True)
 
 
-def _build_file_tree(root: Path) -> dict:
+from typing import Any
+
+def _build_file_tree(root: Path) -> dict[str, Any]:
     """Build a recursive file tree structure from the cloned repo."""
-    tree = {}
+    tree: dict[str, Any] = {}
     try:
         for path in root.rglob("*"):
             if path.is_file() and not _is_ignored(path):
@@ -186,7 +186,7 @@ def _is_ignored(path: Path) -> bool:
     return any(part in ignored_dirs for part in path.parts)
 
 
-def _count_files(tree: dict) -> int:
+def _count_files(tree: dict[str, Any]) -> int:
     """Count leaf nodes (files) in the file tree."""
     count = 0
     for key, value in tree.items():

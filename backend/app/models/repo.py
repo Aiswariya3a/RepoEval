@@ -1,9 +1,14 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import String, Text, DateTime, ForeignKey, BigInteger
+from sqlalchemy import String, Text, DateTime, ForeignKey
+from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.project import Project
+    from app.models.snapshot import RepositorySnapshot
 
 
 class Repo(Base):

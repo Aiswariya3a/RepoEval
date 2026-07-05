@@ -1,9 +1,5 @@
-import time
-from datetime import datetime, timezone
-from urllib.parse import urlparse
 
-from githubkit import GitHub, UnauthAuthStrategy
-from githubkit.retry import RetryRateLimit
+from githubkit import GitHub
 from githubkit.exception import RateLimitExceeded
 
 from app.ingestion.rate_limiter import RateLimiter
@@ -120,7 +116,7 @@ class GithubClient:
                     "created_at": issue.created_at.isoformat() if issue.created_at else None,
                     "closed_at": issue.closed_at.isoformat() if issue.closed_at else None,
                     "user_login": issue.user.login if issue.user else None,
-                    "labels": [l.name for l in (issue.labels or [])],
+                    "labels": [lbl.name for lbl in (issue.labels or [])],
                     "comments": issue.comments,
                 })
             if page >= max_pages:
