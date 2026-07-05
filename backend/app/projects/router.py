@@ -10,10 +10,43 @@ from sqlalchemy.orm import selectinload
 from app.database import get_db
 from app.auth.dependencies import get_current_user
 from app.models.project import Project
+from app.models.repo import Repo
 from app.models.user import User
 from app.projects.schemas import ProjectCreate, ProjectUpdate, ProjectResponse, ProjectListResponse
+from app.repos.router import parse_github_url
 
 router = APIRouter(prefix="/api/projects", tags=["projects"])
+
+# ── Helpers ──────────────────────────────────────────
+
+IN_PROGRESS_STATUSES = {"queued", "fetching_metadata", "cloning", "analyzing"}
+
+
+def _aggregate_ingestion_status(repos: list[Repo]) -> str | None:
+    """Aggregate multiple repos' statuses per D-41 priority: failed > paused > in_progress > complete > pending."""
+    if not repos:
+        return None
+
+    has_failed = any(r.ingestion_status == "failed" for r in repos)
+    has_paused = any(r.ingestion_status == "paused" for r in repos)
+    has_in_progress = any(r.ingestion_status in IN_PROGRESS_STATUSES for r in repos)
+    has_complete = any(r.ingestion_status == "complete" for r in repos)
+
+    if has_failed:
+        return "failed"
+    if has_paused:
+        return "paused"
+    if has_in_progress:
+        return "queued"  # Generic "in progress"
+    if has_complete:
+        return "complete"
+    return "pending"
+
+
+def _set_repo_aggregates(resp: ProjectResponse, repos: list[Repo]) -> None:
+    """Set computed repo_count and ingestion_status on a ProjectResponse."""
+    resp.repo_count = len(repos)
+    resp.ingestion_status = _aggregate_ingestion_status(repos)
 
 
 @router.get("", response_model=ProjectListResponse)
@@ -45,7 +78,7 @@ async def list_projects(
     responses = []
     for p in projects:
         resp = ProjectResponse.model_validate(p)
-        resp.repo_count = len(p.repos)
+        _set_repo_aggregates(resp, p.repos)
         responses.append(resp)
 
     return ProjectListResponse(
@@ -72,7 +105,35 @@ async def create_project(
     db.add(project)
     await db.commit()
     await db.refresh(project)
-    return ProjectResponse.model_validate(project)
+
+    # Create Repo records for any repo URLs provided
+    if body.repo_urls:
+        for url in body.repo_urls:
+            try:
+                owner, name = parse_github_url(url)
+                repo = Repo(
+                    project_id=project.id,
+                    owner=owner,
+                    name=name,
+                    full_name=f"{owner}/{name}",
+                    url=url,
+                    ingestion_status="pending",
+                )
+                db.add(repo)
+            except HTTPException:
+                continue  # Skip invalid URLs silently during creation
+        await db.commit()
+        # Reload project with repos to get accurate counts
+        result = await db.execute(
+            select(Project)
+            .where(Project.id == project.id)
+            .options(selectinload(Project.repos))
+        )
+        project = result.scalar_one()
+
+    resp = ProjectResponse.model_validate(project)
+    _set_repo_aggregates(resp, project.repos)
+    return resp
 
 
 @router.get("/{project_id}", response_model=ProjectResponse)
@@ -93,7 +154,7 @@ async def get_project(
             detail="Project not found",
         )
     resp = ProjectResponse.model_validate(project)
-    resp.repo_count = len(project.repos)
+    _set_repo_aggregates(resp, project.repos)
     return resp
 
 
@@ -121,7 +182,16 @@ async def update_project(
     project.updated_at = datetime.now(timezone.utc)
     await db.commit()
     await db.refresh(project)
-    return ProjectResponse.model_validate(project)
+    # Reload with repos for aggregate data
+    result = await db.execute(
+        select(Project)
+        .where(Project.id == project.id)
+        .options(selectinload(Project.repos))
+    )
+    project = result.scalar_one()
+    resp = ProjectResponse.model_validate(project)
+    _set_repo_aggregates(resp, project.repos)
+    return resp
 
 
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)

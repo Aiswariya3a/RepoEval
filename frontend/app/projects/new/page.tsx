@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { TagSelector } from "@/components/dashboard/tag-selector";
+import { ReposField } from "@/components/repos/repos-field";
+import type { RepoEntry } from "@/components/repos/repos-field";
 import { createProject } from "@/lib/api-projects";
 import type { ProjectCreate } from "@/lib/api-projects";
 
@@ -26,6 +28,7 @@ export default function NewProjectPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [repoEntries, setRepoEntries] = useState<RepoEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -50,6 +53,7 @@ export default function NewProjectPage() {
         name: name.trim(),
         ...(description.trim() && { description: description.trim() }),
         ...(selectedTags.length > 0 && { tags: selectedTags }),
+        repo_urls: repoEntries.map((r) => r.url),
       };
       const project = await createProject(payload);
       router.push(`/projects/${project.id}`);
@@ -126,23 +130,8 @@ export default function NewProjectPage() {
               />
             </div>
 
-            {/* Repo URLs field (decorative — deferred to Phase 3 per D-30) */}
-            <div className="space-y-1.5">
-              <label htmlFor="repo-urls" className="text-sm font-medium">
-                Repository URLs
-              </label>
-              <input
-                id="repo-urls"
-                type="text"
-                placeholder="https://github.com/owner/repo"
-                disabled
-                className="flex h-9 w-full rounded-lg border border-border bg-muted/50 px-3 py-1 text-sm shadow-sm text-muted-foreground cursor-not-allowed"
-                title="Repo URLs will be available for setup in a future update"
-              />
-              <p className="text-xs text-muted-foreground">
-                Repo URLs will be available for setup in a future update.
-              </p>
-            </div>
+            {/* Repo URLs field */}
+            <ReposField repos={repoEntries} onChange={setRepoEntries} disabled={submitting} />
 
             {/* Tags field */}
             <TagSelector

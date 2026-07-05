@@ -7,6 +7,7 @@ class ProjectCreate(BaseModel):
     name: str  # min_length/validated by FastAPI Body
     description: str | None = None
     tags: list[str] | None = None
+    repo_urls: list[str] | None = None
 
 
 class ProjectUpdate(BaseModel):
@@ -21,6 +22,7 @@ class ProjectResponse(BaseModel):
     description: str | None = None
     tags: list[str] | None = None
     repo_count: int = 0
+    ingestion_status: str | None = None
     created_at: datetime
     updated_at: datetime
 

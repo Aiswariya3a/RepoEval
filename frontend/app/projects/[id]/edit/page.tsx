@@ -13,8 +13,11 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { TagSelector } from "@/components/dashboard/tag-selector";
+import { ReposField } from "@/components/repos/repos-field";
+import type { RepoEntry } from "@/components/repos/repos-field";
 import { getProject, updateProject } from "@/lib/api-projects";
 import type { ProjectUpdate } from "@/lib/api-projects";
+import { listProjectRepos, addProjectRepo, removeProjectRepo } from "@/lib/api-repos";
 
 const NAME_REGEX = /^[a-zA-Z0-9 _-]+$/;
 
@@ -42,6 +45,8 @@ export default function EditProjectPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [repoEntries, setRepoEntries] = useState<RepoEntry[]>([]);
+  const [reposLoading, setReposLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -50,6 +55,7 @@ export default function EditProjectPage() {
   useEffect(() => {
     if (!projectId) return;
     setLoading(true);
+    setReposLoading(true);
     setLoadError(null);
     getProject(projectId)
       .then((project) => {
@@ -57,6 +63,23 @@ export default function EditProjectPage() {
         setName(project.name);
         setDescription(project.description ?? "");
         setSelectedTags(project.tags ?? []);
+        // Fetch existing repos
+        return listProjectRepos(projectId)
+          .then((repos) => {
+            setRepoEntries(
+              repos.map((r) => ({
+                id: r.id,
+                url: r.url,
+                owner: r.owner,
+                name: r.name,
+                full_name: r.full_name,
+                ingestion_status: r.ingestion_status,
+              }))
+            );
+          })
+          .catch(() => {
+            // Repos endpoint may not be available yet
+          });
       })
       .catch((err) => {
         setLoadError(
@@ -65,6 +88,7 @@ export default function EditProjectPage() {
       })
       .finally(() => {
         setLoading(false);
+        setReposLoading(false);
       });
   }, [projectId]);
 
@@ -91,6 +115,26 @@ export default function EditProjectPage() {
         ...(selectedTags.length > 0 && { tags: selectedTags }),
       };
       await updateProject(projectId, payload);
+
+      // Sync repos: add new, remove deleted
+      const existingRepos = await listProjectRepos(projectId);
+      const existingUrls = new Set(existingRepos.map((r) => r.url));
+      const newUrls = new Set(repoEntries.map((r) => r.url));
+
+      // Remove repos user deleted
+      for (const repo of existingRepos) {
+        if (!newUrls.has(repo.url)) {
+          await removeProjectRepo(projectId, repo.id);
+        }
+      }
+
+      // Add repos user added
+      for (const entry of repoEntries) {
+        if (!existingUrls.has(entry.url)) {
+          await addProjectRepo(projectId, entry.url);
+        }
+      }
+
       router.push(`/projects/${projectId}`);
     } catch (err) {
       setError(
@@ -241,26 +285,8 @@ export default function EditProjectPage() {
               />
             </div>
 
-            {/* Repo URLs field (decorative — deferred to Phase 3 per D-30) */}
-            <div className="space-y-1.5">
-              <label
-                htmlFor="edit-repo-urls"
-                className="text-sm font-medium"
-              >
-                Repository URLs
-              </label>
-              <input
-                id="edit-repo-urls"
-                type="text"
-                placeholder="https://github.com/owner/repo"
-                disabled
-                className="flex h-9 w-full rounded-lg border border-border bg-muted/50 px-3 py-1 text-sm shadow-sm text-muted-foreground cursor-not-allowed"
-                title="Repo URLs will be available for setup in a future update"
-              />
-              <p className="text-xs text-muted-foreground">
-                Repo URLs will be available for setup in a future update.
-              </p>
-            </div>
+            {/* Repo URLs field */}
+            <ReposField repos={repoEntries} onChange={setRepoEntries} disabled={submitting} />
 
             {/* Tags field */}
             <TagSelector
