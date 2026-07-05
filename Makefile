@@ -20,6 +20,9 @@ keys:
 	openssl genrsa -out backend/keys/private.pem 2048
 	openssl rsa -in backend/keys/private.pem -pubout -out backend/keys/public.pem
 
+dev-worker:
+	cd backend && celery -A app.celery_app worker --loglevel=info --concurrency=2
+
 test:
 	cd backend && python -m pytest
 

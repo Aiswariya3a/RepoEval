@@ -12,6 +12,7 @@ from app.models.user import User
 from app.models.project import Project
 from app.models.repo import Repo
 from app.repos.schemas import RepoCreate, RepoResponse, RepoStatusResponse, IngestionStep
+from app.ingestion.tasks import ingest_repo_task
 
 router = APIRouter(prefix="/api/projects/{project_id}/repos", tags=["repos"])
 
@@ -125,15 +126,50 @@ async def trigger_ingestion(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Trigger ingestion for a repository. Placeholder — Plan 02 will wire this to Celery."""
+    """Trigger ingestion for a repository. Enqueues Celery task."""
     await _get_project(project_id, user, db)
     repo = await _get_repo(repo_id, project_id, db)
 
-    # TODO: Enqueue Celery task — Plan 02 implementation
-    # For now, validate the repo exists and transition status
+    if repo.ingestion_status not in ("pending", "failed"):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Ingestion already in progress (status: {repo.ingestion_status})",
+        )
+
     repo.ingestion_status = "queued"
     repo.updated_at = datetime.now(timezone.utc)
     await db.commit()
+
+    # Enqueue Celery task asynchronously
+    ingest_repo_task.delay(str(repo_id))
+
+    await db.refresh(repo)
+    return RepoResponse.model_validate(repo)
+
+
+@router.post("/{repo_id}/retry", response_model=RepoResponse)
+async def retry_ingestion(
+    project_id: uuid.UUID,
+    repo_id: uuid.UUID,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Retry a failed/paused ingestion from last checkpoint (D-50)."""
+    await _get_project(project_id, user, db)
+    repo = await _get_repo(repo_id, project_id, db)
+
+    if repo.ingestion_status not in ("failed", "paused"):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Cannot retry ingestion in status: {repo.ingestion_status}",
+        )
+
+    repo.ingestion_status = "queued"
+    repo.updated_at = datetime.now(timezone.utc)
+    await db.commit()
+
+    ingest_repo_task.delay(str(repo_id))
+
     await db.refresh(repo)
     return RepoResponse.model_validate(repo)
 
