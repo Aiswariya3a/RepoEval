@@ -22,6 +22,10 @@ class Settings(BaseSettings):
 
     frontend_url: str = "http://localhost:3000"
 
+    celery_broker_url: str = "redis://localhost:6379/0"
+    temp_clone_path: str = "/tmp/repoeval_clones"
+    github_token_refresh_threshold: int = 300
+
     @property
     def cors_origins(self) -> List[str]:
         return [self.frontend_url]
